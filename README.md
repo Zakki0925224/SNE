@@ -7,6 +7,8 @@
 ## Libraries
 * Prism.Unity
 * ReactiveProperty
+* NAudio
+* Newtonsoft.Json
 
 ## Download
 現在開発中。

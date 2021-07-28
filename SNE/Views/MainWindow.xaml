@@ -8,7 +8,7 @@
         <ContentControl prism:RegionManager.RegionName="ContentRegion" />
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File(_F)">
-                <MenuItem Header="New(_N)"/>
+                <MenuItem Header="New(_N)" Command="{Binding MenuItemFileNew_Clicked}"/>
                 <MenuItem Header="Open(_O)..."/>
                 <MenuItem Header="Save(_S)"/>
                 <MenuItem Header="Save As(_A)..."/>
@@ -53,9 +53,9 @@
                             <ColumnDefinition Width="50"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="1" Content="Back"/>
-                        <Button Grid.Column="2" Content="Play/Pause"/>
-                        <Button Grid.Column="3" Content="Forward"/>
+                        <Button Grid.Column="1" Content="Back" Command="{Binding AudioPlayerBackButton_Clicked}"/>
+                        <Button Grid.Column="2" Content="Play/Pause" Command="{Binding AudioPlayerPlayPauseButton_Clicked}"/>
+                        <Button Grid.Column="3" Content="Forward" Command="{Binding AudioPlayerForwardButton_Clicked}"/>
                     </Grid>
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
@@ -63,9 +63,9 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="80"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" HorizontalAlignment="Left"/>
-                        <Slider VerticalAlignment="Center"/>
-                        <Label Grid.Column="2" Content="" HorizontalAlignment="Right"/>
+                        <Label Grid.Column="0" HorizontalAlignment="Left" Content="{Binding CurrentTimeSeconds.Value, Mode=TwoWay}"/>
+                        <Slider Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Value="{Binding CurrentTimeSeconds.Value, Mode=TwoWay}" Maximum="{Binding TotalTimeSeconds.Value}" TickFrequency="0.1"/>
+                        <Label Grid.Column="2" Content="{Binding TotalTimeSeconds.Value}" HorizontalAlignment="Right"/>
                     </Grid>
                 </Grid>
                 <Grid Grid.Column="3">
@@ -74,7 +74,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Label Grid.Column="0" Content="Volume" VerticalAlignment="Center"/>
-                    <Slider Grid.Column="1" Width="100" VerticalAlignment="Center" Maximum="1" LargeChange="0.1" TickFrequency="0.1"/>
+                    <Slider Grid.Column="1" Width="100" VerticalAlignment="Center" Maximum="1" LargeChange="0.1" TickFrequency="0.1" Value="{Binding Volume.Value, Mode=TwoWay}"/>
                 </Grid>
             </Grid>
         </Grid>

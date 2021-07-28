@@ -2,6 +2,7 @@
 音ゲーの譜面を作るシンプルなエディター。
 
 ## Environment
+* Visual Studio 2019
 * .NET Core 3.1
 
 ## Libraries

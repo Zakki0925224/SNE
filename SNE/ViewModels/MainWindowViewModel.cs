@@ -11,7 +11,10 @@ namespace SNE.ViewModels
 {
     public class MainWindowViewModel : BindableBase, INotifyPropertyChanged
     {
+        // models
         public AudioPlayer AudioPlayer { get; set; } = new AudioPlayer();
+
+        // reactive properties
         public ReactiveProperty<string> Title { get; set; } = new ReactiveProperty<string>("SimpleNotesEditor");
         public ReactiveProperty<double> CurrentTimeSeconds { get; set; }
         public ReactiveProperty<double> TotalTimeSeconds { get; set; }

@@ -2,6 +2,7 @@
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using SNE.Models;
+using SNE.Views;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -13,6 +14,7 @@ namespace SNE.ViewModels
     public class MainWindowViewModel : BindableBase, INotifyPropertyChanged
     {
         // models
+        private MainWindow meInstance = App.Current.MainWindow as MainWindow;
         public AudioPlayer AudioPlayer { get; set; } = new AudioPlayer();
 
         // reactive properties
@@ -28,6 +30,7 @@ namespace SNE.ViewModels
         public ReactiveCommand AudioPlayerBackButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerForwardButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand<(object sender, EventArgs e)> Editor_MouseMoved { get; } = new ReactiveCommand<(object sender, EventArgs e)>();
+        public ReactiveCommand<(object sender, EventArgs e)> Editor_MouseLeaved { get; } = new ReactiveCommand<(object sender, EventArgs e)>();
 
         public MainWindowViewModel()
         {
@@ -75,6 +78,24 @@ namespace SNE.ViewModels
                 var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
                 var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
                 Debug.Print($"X:{xPos}, Y:{yPos}");
+
+                if (yPos <= this.GridHeight.Value * this.Lane.Value * 2 &&
+                    xPos % 10 < 0.5 &&
+                    yPos % this.GridHeight.Value * 2 < 0.5)
+                {
+                    meInstance.Cursor = Cursors.Hand;
+                    Debug.Print("Notes can be installed");
+                    Debug.Print($"CX:{Math.Round(xPos, MidpointRounding.AwayFromZero)}, CY:{Math.Round(yPos, MidpointRounding.AwayFromZero)}"); // ノーツが設置されるべき座標
+                }
+                else
+                {
+                    meInstance.Cursor = Cursors.Arrow;
+                }
+            });
+
+            this.Editor_MouseLeaved.Subscribe(_ => 
+            {
+                meInstance.Cursor = Cursors.Arrow;
             });
         }
     }

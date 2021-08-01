@@ -94,6 +94,11 @@
                                     <Converters:EventConverter/>
                                 </rp:EventToReactiveCommand>
                             </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <rp:EventToReactiveCommand Command="{Binding Editor_MouseLeaved}">
+                                    <Converters:EventConverter/>
+                                </rp:EventToReactiveCommand>
+                            </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <Canvas.RenderTransform>
                             <ScaleTransform ScaleX="{Binding BPM.Value, Converter={StaticResource ConvertBPMToSecond}}" ScaleY="{Binding GridHeight.Value}"/>

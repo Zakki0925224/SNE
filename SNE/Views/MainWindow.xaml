@@ -3,12 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:views="clr-namespace:SNE.Views"
-        xmlns:BindingConverters="clr-namespace:SNE.Models.BindingConverters"
+        xmlns:Converters="clr-namespace:SNE.Models.Converters" 
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:rp="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.WPF"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Title="{Binding Title.Value}" Height="450" Width="800" MinHeight="450" MinWidth="800" >
     <Window.Resources>
-        <BindingConverters:ConvertSecondToXcoordinate x:Key="ConvertSecondToXcoordinate"/>
-        <BindingConverters:ConvertBPMToSecond x:Key="ConvertBPMToSecond"/>
+        <Converters:ConvertSecondToXcoordinate x:Key="ConvertSecondToXcoordinate"/>
+        <Converters:ConvertBPMToSecond x:Key="ConvertBPMToSecond"/>
+        <Converters:EventConverter x:Key="EventConverter"/>
         <DrawingBrush x:Key="gridBrush"
                       Viewport="0,0,10,10"
                       ViewportUnits="Absolute"
@@ -85,6 +88,13 @@
             <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <Grid Background="#FF303030">
                     <Canvas Background="{StaticResource gridBrush}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseMove">
+                                <rp:EventToReactiveCommand Command="{Binding Editor_MouseMoved}">
+                                    <Converters:EventConverter/>
+                                </rp:EventToReactiveCommand>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <Canvas.RenderTransform>
                             <ScaleTransform ScaleX="{Binding BPM.Value, Converter={StaticResource ConvertBPMToSecond}}" ScaleY="{Binding GridHeight.Value}"/>
                         </Canvas.RenderTransform>

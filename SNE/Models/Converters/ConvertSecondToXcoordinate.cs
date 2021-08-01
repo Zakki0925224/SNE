@@ -2,20 +2,23 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace SNE.Models.BindingConverters
+namespace SNE.Models.Converters
 {
-    class ConvertBPMToSecond : IValueConverter
+    /// <summary>
+    /// 秒→X座標
+    /// </summary>
+    class ConvertSecondToXcoordinate : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var bpm = (double)value;
-            return (60 / bpm) * 10;
+            var sec = (double)value;
+            return sec * 100;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var sec = (double)value;
-            return (60 * sec) / 10;
+            var xCoord = (double)value;
+            return xCoord / 100;
         }
     }
 }

@@ -2,10 +2,11 @@
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using SNE.Models;
-using SNE.Models.Shell;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Windows.Input;
 
 namespace SNE.ViewModels
 {
@@ -26,6 +27,7 @@ namespace SNE.ViewModels
         public ReactiveCommand AudioPlayerPlayPauseButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerBackButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerForwardButton_Clicked { get; } = new ReactiveCommand();
+        public ReactiveCommand<(object sender, EventArgs e)> Editor_MouseMoved { get; } = new ReactiveCommand<(object sender, EventArgs e)>();
 
         public MainWindowViewModel()
         {
@@ -39,7 +41,7 @@ namespace SNE.ViewModels
         {
             this.MenuItemFileNew_Clicked.Subscribe(_ =>
             {
-                var fileName = FileDialog.ShowOpenFileDialog("MP3 Audio File (*.mp3)|*.mp3", "Open MP3...", true);
+                var fileName = Models.Shell.FileDialog.ShowOpenFileDialog("MP3 Audio File (*.mp3)|*.mp3", "Open MP3...", true);
 
                 if (File.Exists(fileName))
                 {
@@ -66,6 +68,13 @@ namespace SNE.ViewModels
             this.AudioPlayerForwardButton_Clicked.Subscribe(_ =>
             {
                 this.AudioPlayer.Forward(new TimeSpan(0, 0, 5));
+            });
+
+            this.Editor_MouseMoved.Subscribe(x =>
+            {
+                var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
+                var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
+                Debug.Print($"X:{xPos}, Y:{yPos}");
             });
         }
     }

@@ -19,6 +19,9 @@ namespace SNE.ViewModels
         public ReactiveProperty<double> CurrentTimeSeconds { get; set; }
         public ReactiveProperty<double> TotalTimeSeconds { get; set; }
         public ReactiveProperty<double> Volume { get; set; }
+        public ReactiveProperty<double> GridHeight { get; set; } = new ReactiveProperty<double>(5);
+        public ReactiveProperty<double> BPM { get; set; } = new ReactiveProperty<double>(120);
+        public ReactiveProperty<int> Lane { get; set; } = new ReactiveProperty<int>(6);
         public ReactiveCommand MenuItemFileNew_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerPlayPauseButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerBackButton_Clicked { get; } = new ReactiveCommand();

@@ -80,6 +80,7 @@ namespace SNE.Models
                 this.Dispose();
 
             this.AudioFileReader = new Mp3FileReader(mp3FileName);
+            this.WaveOut = new WaveOut();
             this.WaveOut.Init(this.AudioFileReader);
             this.Volume = 0.1;
 

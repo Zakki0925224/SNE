@@ -3,8 +3,36 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:views="clr-namespace:SNE.Views"
+        xmlns:BindingConverters="clr-namespace:SNE.Models.BindingConverters"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Title="{Binding Title.Value}" Height="450" Width="800" MinHeight="450" MinWidth="800" >
+    <Window.Resources>
+        <BindingConverters:ConvertSecondToXcoordinate x:Key="ConvertSecondToXcoordinate"/>
+        <BindingConverters:ConvertBPMToSecond x:Key="ConvertBPMToSecond"/>
+        <DrawingBrush x:Key="gridBrush"
+                      Viewport="0,0,10,10"
+                      ViewportUnits="Absolute"
+                      TileMode="Tile">
+            <DrawingBrush.Drawing>
+                <GeometryDrawing>
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry>
+                            <PathFigure StartPoint="0,0">
+                                <LineSegment Point="0,10"/>
+                                <LineSegment Point="10,10"/>
+                            </PathFigure>
+                            <PathGeometry.Transform>
+                                <ScaleTransform ScaleX="{Binding BPM.Value, Converter={StaticResource ConvertBPMToSecond}}" ScaleY="{Binding GridHeight.Value}"/>
+                            </PathGeometry.Transform>
+                        </PathGeometry>
+                    </GeometryDrawing.Geometry>
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="DarkGray" Thickness="1"/>
+                    </GeometryDrawing.Pen>
+                </GeometryDrawing>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+    </Window.Resources>
     <DockPanel>
         <ContentControl prism:RegionManager.RegionName="ContentRegion" />
         <Menu DockPanel.Dock="Top">
@@ -34,8 +62,6 @@
                         <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="40"/>
                         <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="40"/>
-                        <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="60"/>
                         <ColumnDefinition Width="60"/>
@@ -44,22 +70,27 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="BPM" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBox Grid.Column="1" Text="120" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
-                    <TextBlock Grid.Column="2" Text="Offset" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBox Grid.Column="3" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
-                    <TextBlock Grid.Column="4" Text="Lane" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBox Grid.Column="5" Text="6" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
-                    <StackPanel Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                    <TextBox Grid.Column="1" Text="{Binding BPM.Value}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
+                    <TextBlock Grid.Column="2" Text="Lane" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="3" Text="{Binding Lane.Value}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
+                    <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                     </StackPanel>
-                    <TextBlock Grid.Column="7" Text="Difficulty" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <CheckBox Grid.Column="8" Content="easy" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <CheckBox Grid.Column="9" Content="normal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <CheckBox Grid.Column="10" Content="hard" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="5" Text="Difficulty" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <CheckBox Grid.Column="6" Content="easy" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <CheckBox Grid.Column="7" Content="normal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <CheckBox Grid.Column="8" Content="hard" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Grid>
             </Grid>
-            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#FF303030">
-                <views:GridViewControl/>
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Grid Background="#FF303030">
+                    <Canvas Background="{StaticResource gridBrush}">
+                        <Canvas.RenderTransform>
+                            <ScaleTransform ScaleX="{Binding BPM.Value, Converter={StaticResource ConvertBPMToSecond}}" ScaleY="{Binding GridHeight.Value}"/>
+                        </Canvas.RenderTransform>
+                    </Canvas>
+                    <Line X1="{Binding CurrentTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" X2="{Binding CurrentTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Red"/>
+                </Grid>
             </ScrollViewer>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
@@ -99,7 +130,7 @@
                             <ColumnDefinition Width="80"/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" HorizontalAlignment="Left" Content="{Binding CurrentTimeSeconds.Value, Mode=TwoWay}"/>
-                        <Slider Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Value="{Binding CurrentTimeSeconds.Value, Mode=TwoWay}" Maximum="{Binding TotalTimeSeconds.Value}" TickFrequency="0.1"/>
+                        <Slider Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Value="{Binding CurrentTimeSeconds.Value, Mode=TwoWay}" Maximum="{Binding TotalTimeSeconds.Value}" TickFrequency="0.01"/>
                         <Label Grid.Column="2" Content="{Binding TotalTimeSeconds.Value}" HorizontalAlignment="Right"/>
                     </Grid>
                 </Grid>

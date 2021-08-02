@@ -11,8 +11,8 @@
 * NAudio
 * Newtonsoft.Json
 
-## Download
-現在開発中。
+## Latest Download
+[Download - v0.1Alpha](https://github.com/MusicGameProduction/SNE/releases/download/v0.1Alpha/SNE.zip)
 
 ## License
 本ソフトウェアおよび使用しているライブラリすべてにMIT Licenseが適用されています。

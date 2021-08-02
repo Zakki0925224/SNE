@@ -2,12 +2,16 @@
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using SNE.Models;
+using SNE.Models.Converters;
+using SNE.Models.Utils;
 using SNE.Views;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Windows.Input;
 
 namespace SNE.ViewModels
@@ -27,7 +31,12 @@ namespace SNE.ViewModels
         public ReactiveProperty<double> BPM { get; set; } = new ReactiveProperty<double>(120);
         public ReactiveProperty<int> Lane { get; set; } = new ReactiveProperty<int>(6);
         public ReactiveProperty<bool> IsEditable { get; set; } = new ReactiveProperty<bool>(true);
+        public ReactiveProperty<bool> IsInitialized { get; set; } = new ReactiveProperty<bool>(true);
+        public ReactiveProperty<string> TitleString { get; set; } = new ReactiveProperty<string>("");
+        public ReactiveProperty<string> DescriptionString { get; set; } = new ReactiveProperty<string>("");
         public ReactiveCommand MenuItemFileNew_Clicked { get; } = new ReactiveCommand();
+        public ReactiveCommand MenuItemFileExportJSONFile_Clicked { get; } = new ReactiveCommand();
+        public ReactiveCommand MenuItemHelpAbout_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerPlayPauseButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerBackButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerForwardButton_Clicked { get; } = new ReactiveCommand();
@@ -48,6 +57,7 @@ namespace SNE.ViewModels
             this.CurrentTimeSeconds = this.AudioPlayer.ToReactivePropertyAsSynchronized(x => x.CurrentTimeSeconds);
             this.TotalTimeSeconds = this.AudioPlayer.ToReactivePropertyAsSynchronized(x => x.TotalTimeSeconds);
             this.Volume = this.AudioPlayer.ToReactivePropertyAsSynchronized(x => x.Volume);
+            this.IsInitialized = this.AudioPlayer.ToReactivePropertyAsSynchronized(x => x.IsInitialized);
             SubscribeCommands();
         }
 
@@ -62,9 +72,18 @@ namespace SNE.ViewModels
                     this.AudioPlayer.Initialize(fileName);
                     this.Title.Value = $"{fileName} - SimpleNotesEditor";
                     this.IsEditable.Value = false;
+                    this.TitleString.Value = Path.GetFileNameWithoutExtension(fileName);
                     this.Notes.Clear();
                     RaisePropertyChanged();
                 }
+            });
+
+            this.MenuItemFileExportJSONFile_Clicked.Subscribe(_ =>
+            {
+                var jsonString = ConvertToJsonData.Convert(this.TitleString.Value, this.DescriptionString.Value, new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value);
+                var fileName = Models.Shell.FileDialog.ShowSaveFileDialog("JSON File (*.json)|*.json", "Save JSON File...", true);
+
+                using (var sw = new StreamWriter(fileName, false, Encoding.UTF8)) { sw.Write(jsonString); }
             });
 
             this.AudioPlayerPlayPauseButton_Clicked.Subscribe(_ =>
@@ -93,9 +112,9 @@ namespace SNE.ViewModels
                 var noteXPos = Math.Round(xPos, MidpointRounding.AwayFromZero);
                 var noteYPos = Math.Round(yPos, MidpointRounding.AwayFromZero);
 
-                Debug.Print("Clicked!");
+                //Debug.Print("Clicked!");
 
-                if (meInstance.Cursor == Cursors.Hand)
+                if (meInstance.Cursor == Cursors.Hand && this.IsInitialized.Value)
                 {
                     int index = -1;
 
@@ -126,9 +145,9 @@ namespace SNE.ViewModels
                 var noteXPos = Math.Round(xPos, MidpointRounding.AwayFromZero);
                 var noteYPos = Math.Round(yPos, MidpointRounding.AwayFromZero);
 
-                Debug.Print("Right clicked!");
+                //Debug.Print("Right clicked!");
 
-                if (meInstance.Cursor == Cursors.Hand)
+                if (meInstance.Cursor == Cursors.Hand && this.IsInitialized.Value)
                 {
                     int index = -1;
                     
@@ -148,12 +167,13 @@ namespace SNE.ViewModels
             {
                 var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
                 var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
-                Debug.Print($"X:{xPos}, Y:{yPos}");
+                //Debug.Print($"X:{xPos}, Y:{yPos}");
 
                 if (yPos > this.GridHeight.Value * 2 &&
                     yPos < this.GridHeight.Value * (this.Lane.Value + 1) * 2 &&
                     xPos % 10 < 0.5 &&
-                    yPos % (this.GridHeight.Value * 2) < 0.5)
+                    yPos % (this.GridHeight.Value * 2) < 0.5 &&
+                    this.IsInitialized.Value)
                 {
                     meInstance.Cursor = Cursors.Hand;
                 }
@@ -166,6 +186,15 @@ namespace SNE.ViewModels
             this.Editor_MouseLeaved.Subscribe(_ => 
             {
                 meInstance.Cursor = Cursors.Arrow;
+            });
+
+            this.MenuItemHelpAbout_Clicked.Subscribe(_ =>
+            {
+                var title = AssemblyInfo.GetAssemblyTitle();
+                var desc = AssemblyInfo.GetAssemblyDescription();
+                var version = AssemblyInfo.GetAssembryVersion();
+                var copyright = AssemblyInfo.GetAssemblyCopyright();
+                Models.Shell.MessageBox.ShowInfoMessageBox($"{title}\n{version}\n{desc}\n{copyright}");
             });
         }
     }

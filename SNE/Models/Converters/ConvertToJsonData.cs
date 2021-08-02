@@ -1,0 +1,39 @@
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+
+namespace SNE.Models.Converters
+{
+    public static class ConvertToJsonData
+    {
+        public static string Convert(string title, string description, List<Note> notes, double gridHeight, double BPM)
+        {
+            var data = new JsonData();
+            data.Title = title;
+            data.Description = description;
+            data.NotesData = new List<NoteData>();
+
+            foreach (var note in notes)
+            {
+                var noteData = new NoteData();
+                noteData.Time = ConvertXPositionToSecond(note.XPosition, BPM);
+                noteData.LaneID = ConvertYPositionToLaneID(note.YPosition, gridHeight);
+                noteData.IsActionNote = false;
+                noteData.DifficultyLevel = 0;
+
+                data.NotesData.Add(noteData);
+            }
+
+            return JsonConvert.SerializeObject(data);
+        }
+
+        private static double ConvertXPositionToSecond(double xPos, double BPM)
+        {
+            return (6 / BPM) * xPos;
+        }
+
+        private static int ConvertYPositionToLaneID(double yPos, double gridHeigt)
+        {
+            return (int)(yPos / (gridHeigt * 2));
+        }
+    }
+}

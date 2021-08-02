@@ -4,6 +4,16 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>SNE</AssemblyName>
+    <PackageId>SNE</PackageId>
+    <Version>0.1</Version>
+    <Authors>Zakki0925224</Authors>
+    <Company />
+    <Product>SimpleNotesEditor</Product>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Copyright>Copyright (c) 2021 Zakki0925224</Copyright>
+    <Description>SimpleNotesEditor - A simple editor that creates musical scores for music games
+This software is released under the MIT License.</Description>
+    <PackageProjectUrl>https://github.com/MusicGameProduction/SNE</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NAudio" Version="2.0.1" />
@@ -11,5 +21,11 @@
     <PackageReference Include="Prism.Unity" Version="8.0.0.1909" />
     <PackageReference Include="ReactiveProperty" Version="7.11.0" />
     <PackageReference Include="ReactiveProperty.WPF" Version="7.11.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 </Project>

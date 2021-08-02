@@ -75,7 +75,7 @@
                     <TextBlock Grid.Column="0" Text="BPM" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <TextBox Grid.Column="1" Text="{Binding BPM.Value}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
                     <TextBlock Grid.Column="2" Text="Lane" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBox Grid.Column="3" Text="{Binding Lane.Value}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
+                    <TextBox Grid.Column="3" Text="{Binding Lane.Value}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft" IsEnabled="{Binding IsEditable.Value}"/>
                     <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                     </StackPanel>
@@ -89,6 +89,16 @@
                 <Grid Background="#FF303030">
                     <Canvas Background="{StaticResource gridBrush}">
                         <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseRightButtonDown">
+                                <rp:EventToReactiveCommand Command="{Binding Editor_MouseRightButtonDown}">
+                                    <Converters:EventConverter/>
+                                </rp:EventToReactiveCommand>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseLeftButtonDown">
+                                <rp:EventToReactiveCommand Command="{Binding Editor_MouseLeftButtonDown}">
+                                    <Converters:EventConverter/>
+                                </rp:EventToReactiveCommand>
+                            </i:EventTrigger>
                             <i:EventTrigger EventName="MouseMove">
                                 <rp:EventToReactiveCommand Command="{Binding Editor_MouseMoved}">
                                     <Converters:EventConverter/>
@@ -103,8 +113,26 @@
                         <Canvas.RenderTransform>
                             <ScaleTransform ScaleX="{Binding BPM.Value, Converter={StaticResource ConvertBPMToSecond}}" ScaleY="{Binding GridHeight.Value}"/>
                         </Canvas.RenderTransform>
+                        <ItemsControl ItemsSource="{Binding Notes}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Rectangle Width="1" Height="1" Fill="Yellow"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="{x:Type ContentPresenter}">
+                                    <Setter Property="Canvas.Top" Value="{Binding YPosition}" />
+                                    <Setter Property="Canvas.Left" Value="{Binding XPosition}" />
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
+                        <Line X1="{Binding CurrentTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" X2="{Binding CurrentTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Red"/>
                     </Canvas>
-                    <Line X1="{Binding CurrentTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" X2="{Binding CurrentTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Red"/>
                 </Grid>
             </ScrollViewer>
             <Grid Grid.Row="2">

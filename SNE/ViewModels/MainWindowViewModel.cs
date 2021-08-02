@@ -4,6 +4,7 @@ using Reactive.Bindings.Extensions;
 using SNE.Models;
 using SNE.Views;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -25,12 +26,22 @@ namespace SNE.ViewModels
         public ReactiveProperty<double> GridHeight { get; set; } = new ReactiveProperty<double>(5);
         public ReactiveProperty<double> BPM { get; set; } = new ReactiveProperty<double>(120);
         public ReactiveProperty<int> Lane { get; set; } = new ReactiveProperty<int>(6);
+        public ReactiveProperty<bool> IsEditable { get; set; } = new ReactiveProperty<bool>(true);
         public ReactiveCommand MenuItemFileNew_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerPlayPauseButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerBackButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerForwardButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand<(object sender, EventArgs e)> Editor_MouseMoved { get; } = new ReactiveCommand<(object sender, EventArgs e)>();
         public ReactiveCommand<(object sender, EventArgs e)> Editor_MouseLeaved { get; } = new ReactiveCommand<(object sender, EventArgs e)>();
+        public ReactiveCommand<(object sender, EventArgs e)> Editor_MouseLeftButtonDown { get; } = new ReactiveCommand<(object sender, EventArgs e)>();
+        public ReactiveCommand<(object sender, EventArgs e)> Editor_MouseRightButtonDown { get; } = new ReactiveCommand<(object sender, EventArgs e)>();
+
+        private ObservableCollection<Note> _notes = new ObservableCollection<Note>();
+        public ObservableCollection<Note> Notes
+        {
+            get => _notes;
+            set => SetProperty(ref _notes, value);
+        }
 
         public MainWindowViewModel()
         {
@@ -50,6 +61,8 @@ namespace SNE.ViewModels
                 {
                     this.AudioPlayer.Initialize(fileName);
                     this.Title.Value = $"{fileName} - SimpleNotesEditor";
+                    this.IsEditable.Value = false;
+                    this.Notes.Clear();
                     RaisePropertyChanged();
                 }
             });
@@ -73,19 +86,76 @@ namespace SNE.ViewModels
                 this.AudioPlayer.Forward(new TimeSpan(0, 0, 5));
             });
 
+            this.Editor_MouseLeftButtonDown.Subscribe(x =>
+            {
+                var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
+                var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
+                var noteXPos = Math.Round(xPos, MidpointRounding.AwayFromZero);
+                var noteYPos = Math.Round(yPos, MidpointRounding.AwayFromZero);
+
+                Debug.Print("Clicked!");
+
+                if (meInstance.Cursor == Cursors.Hand)
+                {
+                    int index = -1;
+
+                    for (int i = 0; i < this.Notes.Count; i++)
+                    {
+                        if (this.Notes[i].XPosition == noteXPos &&
+                            this.Notes[i].YPosition == noteYPos)
+                            index = i;
+                    }
+
+                    if (index == -1)
+                    {
+                        var note = new Note
+                        {
+                            XPosition = noteXPos,
+                            YPosition = noteYPos
+                        };
+
+                        this.Notes.Add(note);
+                    }
+                }
+            });
+
+            this.Editor_MouseRightButtonDown.Subscribe(x =>
+            {
+                var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
+                var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
+                var noteXPos = Math.Round(xPos, MidpointRounding.AwayFromZero);
+                var noteYPos = Math.Round(yPos, MidpointRounding.AwayFromZero);
+
+                Debug.Print("Right clicked!");
+
+                if (meInstance.Cursor == Cursors.Hand)
+                {
+                    int index = -1;
+                    
+                    for (int i = 0; i < this.Notes.Count; i++)
+                    {
+                        if (this.Notes[i].XPosition == noteXPos &&
+                            this.Notes[i].YPosition == noteYPos)
+                            index = i;
+                    }
+
+                    if (index != -1)
+                        this.Notes.RemoveAt(index);
+                }
+            });
+
             this.Editor_MouseMoved.Subscribe(x =>
             {
                 var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
                 var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
                 Debug.Print($"X:{xPos}, Y:{yPos}");
 
-                if (yPos <= this.GridHeight.Value * this.Lane.Value * 2 &&
+                if (yPos > this.GridHeight.Value * 2 &&
+                    yPos < this.GridHeight.Value * (this.Lane.Value + 1) * 2 &&
                     xPos % 10 < 0.5 &&
-                    yPos % this.GridHeight.Value * 2 < 0.5)
+                    yPos % (this.GridHeight.Value * 2) < 0.5)
                 {
                     meInstance.Cursor = Cursors.Hand;
-                    Debug.Print("Notes can be installed");
-                    Debug.Print($"CX:{Math.Round(xPos, MidpointRounding.AwayFromZero)}, CY:{Math.Round(yPos, MidpointRounding.AwayFromZero)}"); // ノーツが設置されるべき座標
                 }
                 else
                 {

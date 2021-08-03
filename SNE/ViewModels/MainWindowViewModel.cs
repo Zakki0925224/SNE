@@ -35,6 +35,7 @@ namespace SNE.ViewModels
         public ReactiveProperty<string> TitleString { get; set; } = new ReactiveProperty<string>("");
         public ReactiveCommand MenuItemFileNew_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand MenuItemFileExportJSONFile_Clicked { get; } = new ReactiveCommand();
+        public ReactiveCommand MenuItemFileExit_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand MenuItemHelpAbout_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerPlayPauseButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerBackButton_Clicked { get; } = new ReactiveCommand();
@@ -83,6 +84,11 @@ namespace SNE.ViewModels
                 var fileName = Models.Shell.FileDialog.ShowSaveFileDialog("JSON File (*.json)|*.json", "Save JSON File...", true);
 
                 using (var sw = new StreamWriter(fileName, false, Encoding.UTF8)) { sw.Write(jsonString); }
+            });
+
+            this.MenuItemFileExit_Clicked.Subscribe(_ =>
+            {
+                meInstance.Close();
             });
 
             this.AudioPlayerPlayPauseButton_Clicked.Subscribe(_ =>

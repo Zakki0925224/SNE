@@ -47,7 +47,7 @@
                 <Separator/>
                 <MenuItem Header="Export JSON File..." Command="{Binding MenuItemFileExportJSONFile_Clicked}" IsEnabled="{Binding IsInitialized.Value}"/>
                 <Separator/>
-                <MenuItem Header="Exit(_X)"/>
+                <MenuItem Header="Exit(_X)" Command="{Binding MenuItemFileExit_Clicked}"/>
             </MenuItem>
             <MenuItem Header="Help(_H)">
                 <MenuItem Header="About(_A)..." Command="{Binding MenuItemHelpAbout_Clicked}"/>

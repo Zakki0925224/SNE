@@ -33,7 +33,6 @@ namespace SNE.ViewModels
         public ReactiveProperty<bool> IsEditable { get; set; } = new ReactiveProperty<bool>(true);
         public ReactiveProperty<bool> IsInitialized { get; set; } = new ReactiveProperty<bool>(true);
         public ReactiveProperty<string> TitleString { get; set; } = new ReactiveProperty<string>("");
-        public ReactiveProperty<string> DescriptionString { get; set; } = new ReactiveProperty<string>("");
         public ReactiveCommand MenuItemFileNew_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand MenuItemFileExportJSONFile_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand MenuItemHelpAbout_Clicked { get; } = new ReactiveCommand();
@@ -80,7 +79,7 @@ namespace SNE.ViewModels
 
             this.MenuItemFileExportJSONFile_Clicked.Subscribe(_ =>
             {
-                var jsonString = ConvertToJsonData.Convert(this.TitleString.Value, this.DescriptionString.Value, new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value);
+                var jsonString = ConvertToJsonData.Convert(this.TitleString.Value, "", new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value);
                 var fileName = Models.Shell.FileDialog.ShowSaveFileDialog("JSON File (*.json)|*.json", "Save JSON File...", true);
 
                 using (var sw = new StreamWriter(fileName, false, Encoding.UTF8)) { sw.Write(jsonString); }

@@ -179,7 +179,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="80"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" HorizontalAlignment="Left" Content="{Binding CurrentTimeSeconds.Value, Mode=TwoWay}"/>
+                        <TextBox Grid.Column="0" HorizontalAlignment="Stretch" Text="{Binding CurrentTimeSeconds.Value, Mode=TwoWay}" VerticalAlignment="Center" Width="60" FlowDirection="RightToLeft"/>
                         <Slider Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Value="{Binding CurrentTimeSeconds.Value, Mode=TwoWay}" Maximum="{Binding TotalTimeSeconds.Value}" TickFrequency="0.01"/>
                         <Label Grid.Column="2" Content="{Binding TotalTimeSeconds.Value}" HorizontalAlignment="Right"/>
                     </Grid>

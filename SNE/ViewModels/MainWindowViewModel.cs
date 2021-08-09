@@ -113,8 +113,8 @@ namespace SNE.ViewModels
             {
                 var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
                 var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
-                var noteXPos = Math.Round(xPos, MidpointRounding.AwayFromZero);
-                var noteYPos = Math.Round(yPos, MidpointRounding.AwayFromZero);
+                var noteXPos = Math.Floor(xPos);
+                var noteYPos = Math.Floor(yPos);
 
                 //Debug.Print("Clicked!");
 
@@ -146,8 +146,8 @@ namespace SNE.ViewModels
             {
                 var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
                 var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
-                var noteXPos = Math.Round(xPos, MidpointRounding.AwayFromZero);
-                var noteYPos = Math.Round(yPos, MidpointRounding.AwayFromZero);
+                var noteXPos = Math.Floor(xPos);
+                var noteYPos = Math.Floor(yPos);
 
                 //Debug.Print("Right clicked!");
 
@@ -175,8 +175,8 @@ namespace SNE.ViewModels
 
                 if (yPos > this.GridHeight.Value * 2 &&
                     yPos < this.GridHeight.Value * (this.Lane.Value + 1) * 2 &&
-                    xPos % 10 < 0.5 &&
-                    yPos % (this.GridHeight.Value * 2) < 0.5 &&
+                    xPos % 10 < 0.9 &&
+                    yPos % (this.GridHeight.Value * 2) < 0.9 &&
                     this.IsInitialized.Value)
                 {
                     meInstance.Cursor = Cursors.Hand;

@@ -132,6 +132,42 @@
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
                         </ItemsControl>
+                        <ItemsControl ItemsSource="{Binding LaneTexts}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas IsItemsHost="True" Background="Transparent"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding Text}" Foreground="White" FontSize="3"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="{x:Type ContentPresenter}">
+                                    <Setter Property="Canvas.Top" Value="{Binding YPosition}" />
+                                    <Setter Property="Canvas.Left" Value="{Binding XPosition}" />
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
+                        <ItemsControl ItemsSource="{Binding BPMTexts}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas IsItemsHost="True" Background="Transparent"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding Text}" Foreground="White" FontSize="3"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="{x:Type ContentPresenter}">
+                                    <Setter Property="Canvas.Top" Value="{Binding YPosition}" />
+                                    <Setter Property="Canvas.Left" Value="{Binding XPosition}" />
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
                     </Canvas>
                     <Line X1="{Binding CurrentTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" X2="{Binding CurrentTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Red"/>
                 </Grid>

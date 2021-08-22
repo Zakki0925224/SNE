@@ -51,6 +51,20 @@ namespace SNE.ViewModels
             set => SetProperty(ref _notes, value);
         }
 
+        private ObservableCollection<LaneText> _lane = new ObservableCollection<LaneText>();
+        public ObservableCollection<LaneText> LaneTexts
+        {
+            get => _lane;
+            set => SetProperty(ref _lane, value);
+        }
+
+        private ObservableCollection<BPMText> _bpm = new ObservableCollection<BPMText>();
+        public ObservableCollection<BPMText> BPMTexts
+        {
+            get => _bpm;
+            set => SetProperty(ref _bpm, value);
+        }
+
         public MainWindowViewModel()
         {
             this.CurrentTimeSeconds = this.AudioPlayer.ToReactivePropertyAsSynchronized(x => x.CurrentTimeSeconds);
@@ -58,6 +72,8 @@ namespace SNE.ViewModels
             this.Volume = this.AudioPlayer.ToReactivePropertyAsSynchronized(x => x.Volume);
             this.IsInitialized = this.AudioPlayer.ToReactivePropertyAsSynchronized(x => x.IsInitialized);
             SubscribeCommands();
+
+            UpdateLaneUI();
         }
 
         private void SubscribeCommands()
@@ -74,6 +90,7 @@ namespace SNE.ViewModels
                     this.TitleString.Value = Path.GetFileNameWithoutExtension(fileName);
                     this.Notes.Clear();
                     RaisePropertyChanged();
+                    UpdateBPMUI();
                 }
             });
 
@@ -200,6 +217,48 @@ namespace SNE.ViewModels
                 var copyright = AssemblyInfo.GetAssemblyCopyright();
                 Models.Shell.MessageBox.ShowInfoMessageBox($"{title}\n{version}\n{desc}\n{copyright}");
             });
+
+            this.Lane.Subscribe(_ =>
+            {
+                if (this.Lane.Value > 0)
+                    UpdateLaneUI();
+            });
+        }
+
+        private void UpdateLaneUI()
+        {
+            this.LaneTexts.Clear();
+
+            for (int i = 1; i <= this.Lane.Value; i++)
+            {
+                var lane = new LaneText();
+                lane.Text = $"L: {i}";
+                lane.XPosition = 0;
+                lane.YPosition = GridHeight.Value * (2 * i - 1);
+
+                this.LaneTexts.Add(lane);
+            }
+        }
+
+        private void UpdateBPMUI()
+        {
+            this.BPMTexts.Clear();
+            var bpmToSec = 60 / this.BPM.Value;
+            var cnt = 1;
+
+            for (int i = 0; i <= this.TotalTimeSeconds.Value * 100; i++)
+            {
+                if (i % 10 == 0)
+                {
+                    var bpm = new BPMText();
+                    bpm.Text = cnt.ToString();
+                    bpm.XPosition = i + 4;
+                    bpm.YPosition = 1;
+
+                    this.BPMTexts.Add(bpm);
+                    cnt++;
+                }
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Timers;
 using NAudio.Wave;
 
@@ -99,10 +100,13 @@ namespace SNE.Models
 
         }
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (this.IsPlaying)
-                this.CurrentTimeSeconds = this.AudioFileReader.CurrentTime.TotalSeconds;
+            await Task.Run(() =>
+             {
+                 if (this.IsPlaying)
+                     this.CurrentTimeSeconds = this.AudioFileReader.CurrentTime.TotalSeconds;
+             });
         }
 
         public void Dispose()

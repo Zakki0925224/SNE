@@ -6,6 +6,7 @@ namespace SNE.Models
     {
         public string Title { get; set; }
         public string Description { get; set; }
+        public int BPM { get; set; }
         public List<NoteData> NotesData { get; set; }
     }
 

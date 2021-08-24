@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 
 namespace SNE.Models.Converters
@@ -10,6 +11,7 @@ namespace SNE.Models.Converters
             var data = new JsonData();
             data.Title = title;
             data.Description = description;
+            data.BPM = (int)Math.Round(BPM);
             data.NotesData = new List<NoteData>();
 
             foreach (var note in notes)

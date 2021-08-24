@@ -3,6 +3,8 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using SNE.Models;
 using SNE.Models.Converters;
+using SNE.Models.Editor;
+using SNE.Models.Shell;
 using SNE.Models.Utils;
 using SNE.Views;
 using System;
@@ -30,9 +32,11 @@ namespace SNE.ViewModels
         public ReactiveProperty<double> BPM { get; set; } = new ReactiveProperty<double>(120);
         public ReactiveProperty<int> Lane { get; set; } = new ReactiveProperty<int>(6);
         public ReactiveProperty<bool> IsEditable { get; set; } = new ReactiveProperty<bool>(true);
-        public ReactiveProperty<bool> IsInitialized { get; set; } = new ReactiveProperty<bool>(true);
+        public ReactiveProperty<bool> IsInitialized { get; set; } = new ReactiveProperty<bool>(false);
         public ReactiveProperty<string> TitleString { get; set; } = new ReactiveProperty<string>("");
         public ReactiveCommand MenuItemFileNew_Clicked { get; } = new ReactiveCommand();
+        public ReactiveCommand MenuItemFileOpen_Clicked { get; } = new ReactiveCommand();
+        public ReactiveCommand MenuItemFileSave_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand MenuItemFileExportJSONFile_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand MenuItemFileExit_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand MenuItemHelpAbout_Clicked { get; } = new ReactiveCommand();
@@ -80,26 +84,83 @@ namespace SNE.ViewModels
         {
             this.MenuItemFileNew_Clicked.Subscribe(_ =>
             {
-                var fileName = Models.Shell.FileDialog.ShowOpenFileDialog("MP3 Audio File (*.mp3)|*.mp3", "Open MP3...", true);
+                var fileName = FileDialog.ShowOpenFileDialog("MP3 Audio File (*.mp3)|*.mp3", "Open MP3...", true);
 
-                if (File.Exists(fileName))
+                if (fileName != "")
+                    InitializeEditor(fileName);
+            });
+
+            this.MenuItemFileOpen_Clicked.Subscribe(_ =>
+            {
+                var extention = ProjectInfo.ProjectExtention;
+                var fileName = FileDialog.ShowOpenFileDialog($"Simple Notes Editor Project File (*{extention})|*{extention}", "Open project...", true);
+
+                if (!File.Exists(fileName))
+                    return;
+
+                using (var reader = new StreamReader(fileName))
                 {
-                    this.AudioPlayer.Initialize(fileName);
-                    this.Title.Value = $"{fileName} - SimpleNotesEditor";
-                    this.IsEditable.Value = false;
-                    this.TitleString.Value = Path.GetFileNameWithoutExtension(fileName);
-                    this.Notes.Clear();
-                    RaisePropertyChanged();
-                    UpdateBPMUI();
+                    var jsonString = reader.ReadToEnd();
+                    var dataModel = ConvertToExportDataModel.Convert(jsonString);
+
+                    if (!dataModel.IsSet())
+                        return;
+
+                    InitializeEditor(dataModel.AudioFilePath);
+
+                    if (!this.IsInitialized.Value)
+                        return;
+
+                    this.BPM.Value = dataModel.BPM.Value;
+                    this.Lane.Value = dataModel.Lane.Value;
+                    this.TitleString.Value = dataModel.Title;
+                    // description = datamodel.Description;
+
+                    foreach (var note in dataModel.Notes)
+                        this.Notes.Add(note);
                 }
+            });
+
+            this.MenuItemFileSave_Clicked.Subscribe(_ =>
+            {
+                var extention = ProjectInfo.ProjectExtention;
+                var fileName = FileDialog.ShowSaveFileDialog($"Simple Notes Editor Project File (*{extention})|*{extention}", "Save project...", true);
+
+                if (fileName == "")
+                    return;
+
+                var audioFilePath = this.AudioPlayer.AudioFilePath;
+                var bpm = this.BPM.Value;
+                var lane = this.Lane.Value;
+                var title = this.TitleString.Value;
+                var desc = "";
+                var notes = new List<Note>(this.Notes);
+
+                var model = new ExportDataModel(audioFilePath,
+                                                bpm,
+                                                lane,
+                                                title,
+                                                desc,
+                                                notes);
+
+                var jsonString = ConvertToJsonData.ConvertToProjectDataJson(model);
+
+                if (jsonString == "")
+                {
+                    MessageBox.ShowErrorMessageBox("Failed to generate json data.");
+                    return;
+                }
+
+                using (var writer = new StreamWriter(fileName, false, Encoding.UTF8)) { writer.Write(jsonString); }
             });
 
             this.MenuItemFileExportJSONFile_Clicked.Subscribe(_ =>
             {
-                var jsonString = ConvertToJsonData.Convert(this.TitleString.Value, "", new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value);
-                var fileName = Models.Shell.FileDialog.ShowSaveFileDialog("JSON File (*.json)|*.json", "Save JSON File...", true);
+                var jsonString = ConvertToJsonData.ConvertToExportJson(this.TitleString.Value, "", new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value);
+                var fileName = FileDialog.ShowSaveFileDialog("JSON File (*.json)|*.json", "Save JSON File...", true);
 
-                using (var sw = new StreamWriter(fileName, false, Encoding.UTF8)) { sw.Write(jsonString); }
+                if (fileName != "")
+                    using (var sw = new StreamWriter(fileName, false, Encoding.UTF8)) { sw.Write(jsonString); }
             });
 
             this.MenuItemFileExit_Clicked.Subscribe(_ =>
@@ -223,6 +284,26 @@ namespace SNE.ViewModels
                 if (this.Lane.Value > 0)
                     UpdateLaneUI();
             });
+        }
+
+        private void InitializeEditor(string audioFilePath)
+        {
+            if (File.Exists(audioFilePath))
+            {
+                this.AudioPlayer.Initialize(audioFilePath);
+                this.Title.Value = $"{audioFilePath} - SimpleNotesEditor";
+                this.IsEditable.Value = false;
+                this.TitleString.Value = Path.GetFileNameWithoutExtension(audioFilePath);
+                this.Notes.Clear();
+                RaisePropertyChanged();
+                UpdateBPMUI();
+                this.IsInitialized.Value = true;
+            }
+            else
+            {
+                MessageBox.ShowErrorMessageBox($"\"{audioFilePath}\" was not found.");
+                this.IsInitialized.Value = false;
+            }
         }
 
         private void UpdateLaneUI()

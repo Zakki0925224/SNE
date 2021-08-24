@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SNE.Models.Editor;
 using System;
 using System.Collections.Generic;
 
@@ -6,7 +7,11 @@ namespace SNE.Models.Converters
 {
     public static class ConvertToJsonData
     {
-        public static string Convert(string title, string description, List<Note> notes, double gridHeight, double BPM)
+        public static string ConvertToExportJson(string title,
+                                                 string description,
+                                                 List<Note> notes,
+                                                 double gridHeight,
+                                                 double BPM)
         {
             var data = new JsonData();
             data.Title = title;
@@ -26,6 +31,11 @@ namespace SNE.Models.Converters
             }
 
             return JsonConvert.SerializeObject(data);
+        }
+
+        public static string ConvertToProjectDataJson(ExportDataModel model)
+        {
+            return JsonConvert.SerializeObject(model);
         }
 
         private static double ConvertXPositionToSecond(double xPos, double BPM)

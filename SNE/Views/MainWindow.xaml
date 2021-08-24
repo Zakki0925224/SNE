@@ -41,11 +41,10 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File(_F)">
                 <MenuItem Header="New(_N)" Command="{Binding MenuItemFileNew_Clicked}"/>
-                <MenuItem Header="Open(_O)..." IsEnabled="False"/>
-                <MenuItem Header="Save(_S)" IsEnabled="False"/>
-                <MenuItem Header="Save As(_A)..." IsEnabled="False"/>
+                <MenuItem Header="Open project(_O)..." IsEnabled="True" Command="{Binding MenuItemFileOpen_Clicked}"/>
+                <MenuItem Header="Save project(_S)..." IsEnabled="{Binding IsInitialized.Value}" Command="{Binding MenuItemFileSave_Clicked}"/>
                 <Separator/>
-                <MenuItem Header="Export JSON File..." Command="{Binding MenuItemFileExportJSONFile_Clicked}" IsEnabled="{Binding IsInitialized.Value}"/>
+                <MenuItem Header="Export JSON file..." Command="{Binding MenuItemFileExportJSONFile_Clicked}" IsEnabled="{Binding IsInitialized.Value}"/>
                 <Separator/>
                 <MenuItem Header="Exit(_X)" Command="{Binding MenuItemFileExit_Clicked}"/>
             </MenuItem>

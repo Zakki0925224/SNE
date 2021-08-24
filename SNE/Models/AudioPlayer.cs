@@ -75,12 +75,15 @@ namespace SNE.Models
             }
         }
 
+        public string AudioFilePath { get; set; }
+
         public void Initialize(string mp3FileName)
         {
             if (this.IsInitialized)
                 this.Dispose();
 
             this.AudioFileReader = new Mp3FileReader(mp3FileName);
+            this.AudioFilePath = mp3FileName;
             this.WaveOut = new WaveOut();
             this.WaveOut.Init(this.AudioFileReader);
             this.Volume = 0.1;

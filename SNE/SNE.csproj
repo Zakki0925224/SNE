@@ -5,7 +5,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>SNE</AssemblyName>
     <PackageId>SNE</PackageId>
-    <Version>0.1</Version>
+    <Version>0.2</Version>
     <Authors>Zakki0925224</Authors>
     <Company />
     <Product>SimpleNotesEditor</Product>

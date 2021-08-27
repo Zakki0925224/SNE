@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using SNE.Models.Editor.ObservableModels;
+using System.Collections.Generic;
 
-namespace SNE.Models.Editor
+namespace SNE.Models.Editor.DataModels
 {
     public class ExportDataModel
     {

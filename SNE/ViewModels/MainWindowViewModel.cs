@@ -1,9 +1,10 @@
 ﻿using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
-using SNE.Models;
 using SNE.Models.Converters;
 using SNE.Models.Editor;
+using SNE.Models.Editor.DataModels;
+using SNE.Models.Editor.ObservableModels;
 using SNE.Models.Shell;
 using SNE.Models.Utils;
 using SNE.Views;

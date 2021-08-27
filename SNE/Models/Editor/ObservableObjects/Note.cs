@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SNE.Models
+﻿namespace SNE.Models.Editor.ObservableModels
 {
     public class Note
     {

@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using SNE.Models.Editor;
+using SNE.Models.Editor.DataModels;
+using SNE.Models.Editor.ObservableModels;
 using System;
 using System.Collections.Generic;
 
@@ -13,15 +15,15 @@ namespace SNE.Models.Converters
                                                  double gridHeight,
                                                  double BPM)
         {
-            var data = new JsonData();
+            var data = new JsonDataModel();
             data.Title = title;
             data.Description = description;
             data.BPM = (int)Math.Round(BPM);
-            data.NotesData = new List<NoteData>();
+            data.NotesData = new List<NoteDataModel>();
 
             foreach (var note in notes)
             {
-                var noteData = new NoteData();
+                var noteData = new NoteDataModel();
                 noteData.Time = ConvertXPositionToSecond(note.XPosition, BPM);
                 noteData.LaneID = ConvertYPositionToLaneID(note.YPosition, gridHeight);
                 noteData.IsActionNote = false;

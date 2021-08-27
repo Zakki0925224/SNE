@@ -1,10 +1,10 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Timers;
-using NAudio.Wave;
 
-namespace SNE.Models
+namespace SNE.Models.Editor
 {
     public class AudioPlayer : INotifyPropertyChanged, IDisposable
     {
@@ -106,10 +106,10 @@ namespace SNE.Models
         private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             await Task.Run(() =>
-             {
-                 if (this.IsPlaying)
-                     this.CurrentTimeSeconds = this.AudioFileReader.CurrentTime.TotalSeconds;
-             });
+            {
+                if (this.IsPlaying)
+                    this.CurrentTimeSeconds = this.AudioFileReader.CurrentTime.TotalSeconds;
+            });
         }
 
         public void Dispose()

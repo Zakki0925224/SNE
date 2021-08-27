@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 
-namespace SNE.Models
+namespace SNE.Models.Editor.DataModels
 {
-    public class JsonData
+    public class JsonDataModel
     {
         public string Title { get; set; }
         public string Description { get; set; }
         public int BPM { get; set; }
-        public List<NoteData> NotesData { get; set; }
+        public List<NoteDataModel> NotesData { get; set; }
     }
 
-    public class NoteData
+    public class NoteDataModel
     {
         public double Time { get; set; }
         public int LaneID { get; set; }

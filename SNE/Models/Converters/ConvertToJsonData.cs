@@ -19,6 +19,7 @@ namespace SNE.Models.Converters
             data.Title = title;
             data.Description = description;
             data.BPM = (int)Math.Round(BPM);
+            data.GUID = Guid.NewGuid().ToString();
             data.NotesData = new List<NoteDataModel>();
 
             foreach (var note in notes)

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Input;
@@ -219,6 +220,11 @@ namespace SNE.ViewModels
                         this.Notes.Add(note);
                     }
                 }
+                else if (meInstance.Cursor != Cursors.Hand && this.IsInitialized.Value)
+                {
+                    //var sec = ConvertXcoordinateToSecond.Convert(xPos);
+                    //this.CurrentTimeSeconds.Value = sec;
+                }
             });
 
             this.Editor_MouseRightButtonDown.Subscribe(x =>
@@ -325,7 +331,6 @@ namespace SNE.ViewModels
         private void UpdateBPMUI()
         {
             this.BPMTexts.Clear();
-            var bpmToSec = 60 / this.BPM.Value;
             var cnt = 1;
 
             for (int i = 0; i <= this.TotalTimeSeconds.Value * 100; i++)

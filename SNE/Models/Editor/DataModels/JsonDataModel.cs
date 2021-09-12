@@ -7,6 +7,7 @@ namespace SNE.Models.Editor.DataModels
         public string Title { get; set; }
         public string Description { get; set; }
         public int BPM { get; set; }
+        public string GUID { get; set; }
         public List<NoteDataModel> NotesData { get; set; }
     }
 

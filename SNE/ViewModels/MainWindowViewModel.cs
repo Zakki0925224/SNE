@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Input;
@@ -33,6 +32,9 @@ namespace SNE.ViewModels
         public ReactiveProperty<double> GridHeight { get; set; } = new ReactiveProperty<double>(5);
         public ReactiveProperty<double> BPM { get; set; } = new ReactiveProperty<double>(120);
         public ReactiveProperty<int> Lane { get; set; } = new ReactiveProperty<int>(6);
+        public ReactiveProperty<bool> ShowEasyNotes { get; set; } = new ReactiveProperty<bool>(true);
+        public ReactiveProperty<bool> ShowNormalNotes { get; set; } = new ReactiveProperty<bool>(false);
+        public ReactiveProperty<bool> ShowHardNotes { get; set; } = new ReactiveProperty<bool>(false);
         public ReactiveProperty<bool> IsEditable { get; set; } = new ReactiveProperty<bool>(true);
         public ReactiveProperty<bool> IsInitialized { get; set; } = new ReactiveProperty<bool>(false);
         public ReactiveProperty<string> TitleString { get; set; } = new ReactiveProperty<string>("");
@@ -55,6 +57,13 @@ namespace SNE.ViewModels
         {
             get => _notes;
             set => SetProperty(ref _notes, value);
+        }
+
+        private ObservableCollection<Note> _filteredNotes = new ObservableCollection<Note>();
+        public ObservableCollection<Note> FilteredNotes
+        {
+            get => _filteredNotes;
+            set => SetProperty(ref _filteredNotes, value);
         }
 
         private ObservableCollection<LaneText> _lane = new ObservableCollection<LaneText>();
@@ -88,8 +97,13 @@ namespace SNE.ViewModels
             {
                 var fileName = FileDialog.ShowOpenFileDialog("MP3 Audio File (*.mp3)|*.mp3", "Open MP3...", true);
 
-                if (fileName != "")
-                    InitializeEditor(fileName);
+                if (fileName == "")
+                    return;
+                
+                InitializeEditor(fileName);
+                UpdateNotesUI();
+                UpdateBPMUI();
+                UpdateLaneUI();
             });
 
             this.MenuItemFileOpen_Clicked.Subscribe(_ =>
@@ -120,6 +134,10 @@ namespace SNE.ViewModels
 
                     foreach (var note in dataModel.Notes)
                         this.Notes.Add(note);
+
+                    UpdateNotesUI();
+                    UpdateBPMUI();
+                    UpdateLaneUI();
                 }
             });
 
@@ -200,12 +218,18 @@ namespace SNE.ViewModels
 
                 if (meInstance.Cursor == Cursors.Hand && this.IsInitialized.Value)
                 {
-                    int index = -1;
+                    var index = -1;
+                    var level = -1;
+
+                    if (this.ShowEasyNotes.Value) level = 0;
+                    else if (this.ShowNormalNotes.Value) level = 1;
+                    else if (this.ShowHardNotes.Value) level = 2;
 
                     for (int i = 0; i < this.Notes.Count; i++)
                     {
                         if (this.Notes[i].XPosition == noteXPos &&
-                            this.Notes[i].YPosition == noteYPos)
+                            this.Notes[i].YPosition == noteYPos &&
+                            this.Notes[i].DifficultyLevel == level)
                             index = i;
                     }
 
@@ -214,10 +238,12 @@ namespace SNE.ViewModels
                         var note = new Note
                         {
                             XPosition = noteXPos,
-                            YPosition = noteYPos
+                            YPosition = noteYPos,
+                            DifficultyLevel = level
                         };
 
                         this.Notes.Add(note);
+                        UpdateNotesUI();
                     }
                 }
                 else if (meInstance.Cursor != Cursors.Hand && this.IsInitialized.Value)
@@ -234,21 +260,31 @@ namespace SNE.ViewModels
                 var noteXPos = Math.Floor(xPos);
                 var noteYPos = Math.Floor(yPos);
 
+                var level = -1;
+
+                if (this.ShowEasyNotes.Value) level = 0;
+                else if (this.ShowNormalNotes.Value) level = 1;
+                else if (this.ShowHardNotes.Value) level = 2;
+
                 //Debug.Print("Right clicked!");
 
                 if (meInstance.Cursor == Cursors.Hand && this.IsInitialized.Value)
                 {
                     int index = -1;
-                    
+
                     for (int i = 0; i < this.Notes.Count; i++)
                     {
                         if (this.Notes[i].XPosition == noteXPos &&
-                            this.Notes[i].YPosition == noteYPos)
+                            this.Notes[i].YPosition == noteYPos &&
+                            this.Notes[i].DifficultyLevel == level)
                             index = i;
                     }
 
                     if (index != -1)
+                    {
                         this.Notes.RemoveAt(index);
+                        UpdateNotesUI();
+                    }
                 }
             });
 
@@ -283,13 +319,28 @@ namespace SNE.ViewModels
                 var desc = AssemblyInfo.GetAssemblyDescription();
                 var version = AssemblyInfo.GetAssembryVersion();
                 var copyright = AssemblyInfo.GetAssemblyCopyright();
-                Models.Shell.MessageBox.ShowInfoMessageBox($"{title}\n{version}\n{desc}\n{copyright}");
+                MessageBox.ShowInfoMessageBox($"{title}\n{version}\n{desc}\n{copyright}");
             });
 
             this.Lane.Subscribe(_ =>
             {
                 if (this.Lane.Value > 0)
                     UpdateLaneUI();
+            });
+
+            this.ShowEasyNotes.Subscribe(_ =>
+            {
+                UpdateNotesUI();
+            });
+
+            this.ShowNormalNotes.Subscribe(_ =>
+            {
+                UpdateNotesUI();
+            });
+
+            this.ShowHardNotes.Subscribe(_ =>
+            {
+                UpdateNotesUI();
             });
         }
 
@@ -303,7 +354,6 @@ namespace SNE.ViewModels
                 this.TitleString.Value = Path.GetFileNameWithoutExtension(audioFilePath);
                 this.Notes.Clear();
                 RaisePropertyChanged();
-                UpdateBPMUI();
                 this.IsInitialized.Value = true;
             }
             else
@@ -344,6 +394,32 @@ namespace SNE.ViewModels
 
                     this.BPMTexts.Add(bpm);
                     cnt++;
+                }
+            }
+        }
+
+        private void UpdateNotesUI()
+        {
+            this.FilteredNotes.Clear();
+
+            foreach (var note in this.Notes)
+            {
+                if (this.ShowEasyNotes.Value && note.DifficultyLevel == 0)
+                {
+                    this.FilteredNotes.Add(note);
+                    continue;
+                }
+
+                if (this.ShowNormalNotes.Value && note.DifficultyLevel == 1)
+                {
+                    this.FilteredNotes.Add(note);
+                    continue;
+                }
+
+                if (this.ShowHardNotes.Value && note.DifficultyLevel == 2)
+                {
+                    this.FilteredNotes.Add(note);
+                    continue;
                 }
             }
         }

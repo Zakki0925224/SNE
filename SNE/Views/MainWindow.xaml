@@ -12,6 +12,7 @@
         <Converters:ConvertSecondToXcoordinate x:Key="ConvertSecondToXcoordinate"/>
         <Converters:ConvertBPMToSecond x:Key="ConvertBPMToSecond"/>
         <Converters:EventConverter x:Key="EventConverter"/>
+        <Converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
         <DrawingBrush x:Key="gridBrush"
                       Viewport="0,0,10,10"
                       ViewportUnits="Absolute"
@@ -66,7 +67,7 @@
                         <ColumnDefinition Width="40"/>
                         <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="90"/>
                         <ColumnDefinition Width="60"/>
                         <ColumnDefinition Width="60"/>
                         <ColumnDefinition Width="60"/>
@@ -79,10 +80,10 @@
                     <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                     </StackPanel>
-                    <TextBlock Grid.Column="5" Text="Difficulty" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <CheckBox Grid.Column="6" Content="easy" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False"/>
-                    <CheckBox Grid.Column="7" Content="normal" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False"/>
-                    <CheckBox Grid.Column="8" Content="hard" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="False"/>
+                    <TextBlock Grid.Column="5" Text="DifficultyMode" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <RadioButton Grid.Column="6" Content="Easy" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowEasyNotes.Value}"/>
+                    <RadioButton Grid.Column="7" Content="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowNormalNotes.Value}"/>
+                    <RadioButton Grid.Column="8" Content="Hard" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowHardNotes.Value}"/>
                 </Grid>
             </Grid>
             <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
@@ -113,24 +114,6 @@
                         <Canvas.RenderTransform>
                             <ScaleTransform ScaleX="{Binding BPM.Value, Converter={StaticResource ConvertBPMToSecond}}" ScaleY="{Binding GridHeight.Value}"/>
                         </Canvas.RenderTransform>
-                        <ItemsControl ItemsSource="{Binding Notes}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <Canvas/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Rectangle Width="2" Height="2" Fill="LightGreen"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                            <ItemsControl.ItemContainerStyle>
-                                <Style TargetType="{x:Type ContentPresenter}">
-                                    <Setter Property="Canvas.Top" Value="{Binding YPosition}"/>
-                                    <Setter Property="Canvas.Left" Value="{Binding XPosition}"/>
-                                </Style>
-                            </ItemsControl.ItemContainerStyle>
-                        </ItemsControl>
                         <ItemsControl ItemsSource="{Binding LaneTexts}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -164,6 +147,24 @@
                                 <Style TargetType="{x:Type ContentPresenter}">
                                     <Setter Property="Canvas.Top" Value="{Binding YPosition}" />
                                     <Setter Property="Canvas.Left" Value="{Binding XPosition}" />
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
+                        <ItemsControl ItemsSource="{Binding FilteredNotes}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Rectangle Width="2" Height="2" Fill="{Binding NoteColor, Converter={StaticResource ColorToBrushConverter}}"></Rectangle>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="{x:Type ContentPresenter}">
+                                    <Setter Property="Canvas.Top" Value="{Binding YPosition}"/>
+                                    <Setter Property="Canvas.Left" Value="{Binding XPosition}"/>
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
                         </ItemsControl>

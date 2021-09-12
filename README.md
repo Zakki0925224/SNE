@@ -1,9 +1,9 @@
 # SimpleNotesEditor
-音ゲーの譜面を作るシンプルなエディター。
+音ゲーの譜面を作るシンプルなエディター。mp3形式の音楽ファイルに対応しています。
 
-## Environment
+## Develop Environment
 * Visual Studio 2019
-* .NET Core 3.1
+* .NET Core 3.1 WPF
 
 ## Libraries
 * Prism.Unity

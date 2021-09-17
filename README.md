@@ -12,9 +12,9 @@
 * Newtonsoft.Json
 
 ## Latest Download
-[Download Simple Notes Editor (for 64bit windows) - v0.3Alpha](https://github.com/MusicGameProduction/SNE/releases/download/v0.3Alpha/SNE.zip)
+[Download Simple Notes Editor (for 64bit windows) - v0.3Alpha](https://github.com/Zakki0925224/SNE/releases/download/v0.3Alpha/SNE.zip)
 
-([リリース一覧](https://github.com/MusicGameProduction/SNE/releases))
+([リリース一覧](https://github.com/Zakki0925224/SNE/releases))
 
 ## Update Histories
 ### v0.3Alpha

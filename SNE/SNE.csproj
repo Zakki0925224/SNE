@@ -13,7 +13,7 @@
     <Copyright>Copyright (c) 2021 Zakki0925224</Copyright>
     <Description>SimpleNotesEditor - A simple editor that creates musical scores for music games
 This software is released under the MIT License.</Description>
-    <PackageProjectUrl>https://github.com/MusicGameProduction/SNE</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/Zakki0925224/SNE</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NAudio" Version="2.0.1" />

@@ -6,7 +6,7 @@
 ## ScreenShots
 ![](https://user-images.githubusercontent.com/49384910/133747964-ffec1d67-ce29-4fb6-b84a-82bde2c663f3.png)
 ![](https://user-images.githubusercontent.com/49384910/133747966-c8acccc1-4b69-49aa-81a6-88e4b08bbafe.png)
-↑水平方向の拡大率を利用しているため、BPM値を変更すると横幅が縮小・拡大されます
+* 水平方向の拡大率を利用しているため、BPM値を変更すると横幅が縮小・拡大されます
 
 ## Exported musical score sample
 ```json

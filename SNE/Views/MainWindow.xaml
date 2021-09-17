@@ -158,7 +158,7 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Rectangle Width="2" Height="2" Fill="{Binding NoteColor, Converter={StaticResource ColorToBrushConverter}}"></Rectangle>
+                                    <Rectangle Width="5" Height="5" Fill="{Binding NoteColor, Converter={StaticResource ColorToBrushConverter}}"/>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                             <ItemsControl.ItemContainerStyle>
@@ -184,13 +184,21 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="1">
+                    <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="80"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Title" Grid.Column="0"/>
                         <TextBox Grid.Column="1" Height="20" Text="{Binding TitleString.Value}"/>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Description" Grid.Column="0"/>
+                        <TextBox Grid.Column="1" Height="20" Text="{Binding DescString.Value}"/>
                     </Grid>
                 </Grid>
                 <Grid Grid.Column="1">

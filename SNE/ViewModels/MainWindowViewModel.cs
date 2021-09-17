@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows.Input;
@@ -38,6 +39,7 @@ namespace SNE.ViewModels
         public ReactiveProperty<bool> IsEditable { get; set; } = new ReactiveProperty<bool>(true);
         public ReactiveProperty<bool> IsInitialized { get; set; } = new ReactiveProperty<bool>(false);
         public ReactiveProperty<string> TitleString { get; set; } = new ReactiveProperty<string>("");
+        public ReactiveProperty<string> DescString { get; set; } = new ReactiveProperty<string>("");
         public ReactiveCommand MenuItemFileNew_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand MenuItemFileOpen_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand MenuItemFileSave_Clicked { get; } = new ReactiveCommand();
@@ -130,7 +132,7 @@ namespace SNE.ViewModels
                     this.BPM.Value = dataModel.BPM.Value;
                     this.Lane.Value = dataModel.Lane.Value;
                     this.TitleString.Value = dataModel.Title;
-                    // description = datamodel.Description;
+                    this.DescString.Value = dataModel.Description;
 
                     foreach (var note in dataModel.Notes)
                         this.Notes.Add(note);
@@ -153,7 +155,7 @@ namespace SNE.ViewModels
                 var bpm = this.BPM.Value;
                 var lane = this.Lane.Value;
                 var title = this.TitleString.Value;
-                var desc = "";
+                var desc = this.DescString.Value;
                 var notes = new List<Note>(this.Notes);
 
                 var model = new ExportDataModel(audioFilePath,
@@ -176,7 +178,7 @@ namespace SNE.ViewModels
 
             this.MenuItemFileExportJSONFile_Clicked.Subscribe(_ =>
             {
-                var jsonString = ConvertToJsonData.ConvertToExportJson(this.TitleString.Value, "", new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value);
+                var jsonString = ConvertToJsonData.ConvertToExportJson(this.TitleString.Value, this.DescString.Value, new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value);
                 var fileName = FileDialog.ShowSaveFileDialog("JSON File (*.json)|*.json", "Save JSON File...", true);
 
                 if (fileName != "")
@@ -211,8 +213,8 @@ namespace SNE.ViewModels
             {
                 var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
                 var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
-                var noteXPos = Math.Floor(xPos);
-                var noteYPos = Math.Floor(yPos);
+                var noteXPos = Math.Floor(xPos / 10) * 10;
+                var noteYPos = Math.Floor(yPos / 10) * 10;
 
                 //Debug.Print("Clicked!");
 
@@ -257,8 +259,8 @@ namespace SNE.ViewModels
             {
                 var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
                 var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
-                var noteXPos = Math.Floor(xPos);
-                var noteYPos = Math.Floor(yPos);
+                var noteXPos = Math.Floor(xPos / 10) * 10;
+                var noteYPos = Math.Floor(yPos / 10) * 10;
 
                 var level = -1;
 
@@ -293,11 +295,13 @@ namespace SNE.ViewModels
                 var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
                 var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
                 //Debug.Print($"X:{xPos}, Y:{yPos}");
+                //Debug.Print($"X:{xPos} % 10 = {xPos % 10}");
+                //Debug.Print($"Y:{yPos} % 10 = {yPos % 10}");
 
                 if (yPos > this.GridHeight.Value * 2 &&
                     yPos < this.GridHeight.Value * (this.Lane.Value + 1) * 2 &&
-                    xPos % 10 < 0.9 &&
-                    yPos % (this.GridHeight.Value * 2) < 0.9 &&
+                    xPos % 10 < 5 &&
+                    yPos % (this.GridHeight.Value * 2) < 5 &&
                     this.IsInitialized.Value)
                 {
                     meInstance.Cursor = Cursors.Hand;

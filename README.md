@@ -1,4 +1,8 @@
 # SimpleNotesEditor
+![lisence](https://img.shields.io/github/license/Zakki0925224/SNE)
+![latest-version](https://img.shields.io/github/v/release/Zakki0925224/SNE?include_prereleases)
+![lisence](https://img.shields.io/github/downloads/Zakki0925224/SNE/total)
+
 音ゲーの譜面を作るシンプルなエディター。mp3形式の音楽ファイルからjson形式の譜面を出力します。
 
 **ロングノーツ・スライドノーツ等**には対応していません。

@@ -12,17 +12,16 @@
 * Newtonsoft.Json
 
 ## Latest Download
-[Download - v0.2Alpha](https://github.com/MusicGameProduction/SNE/releases/download/v0.2Alpha/SNE.zip)
+[Download Simple Notes Editor (for 64bit windows) - v0.3Alpha](https://github.com/MusicGameProduction/SNE/releases/download/v0.3Alpha/SNE.zip)
 
 ([リリース一覧](https://github.com/MusicGameProduction/SNE/releases))
 
 ## Update Histories
-### v0.2Alpha
-* 再生位置を変更するテキストボックスを追加
-* レーン番号とBPM打数表示の追加
-* 編集中プロジェクトの途中保存・復元機能の追加
-* ノーツ設置・削除位置のマウス判定をより広く修正
-* ノーツサイズ・カラーを変更
+### v0.3Alpha
+* 難易度切り替えシステムの追加
+* 譜面判別用GUIDの追加
+* ノーツ設置判定をもっと広く
+* Descriptionテキストボックスの追加
 * その他バグ修正
 
 ## License

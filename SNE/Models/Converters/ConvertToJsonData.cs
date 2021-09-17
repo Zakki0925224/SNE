@@ -28,7 +28,7 @@ namespace SNE.Models.Converters
                 noteData.Time = ConvertXPositionToSecond(note.XPosition, BPM);
                 noteData.LaneID = ConvertYPositionToLaneID(note.YPosition, gridHeight);
                 noteData.IsActionNote = false;
-                noteData.DifficultyLevel = 0;
+                noteData.DifficultyLevel = note.DifficultyLevel;
 
                 data.NotesData.Add(noteData);
             }

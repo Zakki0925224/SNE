@@ -16,6 +16,7 @@ This software is released under the MIT License.</Description>
     <PackageProjectUrl>https://github.com/Zakki0925224/SNE</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.1.0" />
     <PackageReference Include="NAudio" Version="2.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Prism.Unity" Version="8.0.0.1909" />

@@ -6,14 +6,14 @@ namespace SNE.Models.Editor.DataModels
     public class ExportDataModel
     {
         public string AudioFilePath { get; set; } = null;
-        public double? BPM { get; set; } = null;
+        public int? BPM { get; set; } = null;
         public int? Lane { get; set; } = null;
         public string Title { get; set; } = null;
         public string Description { get; set; } = null;
         public List<Note> Notes { get; set; } = null;
 
         public ExportDataModel(string audioFilePath,
-                               double bpm,
+                               int bpm,
                                int lane,
                                string title,
                                string description,

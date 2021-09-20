@@ -7,6 +7,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:rp="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.WPF"
         xmlns:qc="http://QuickConverter.CodePlex.com/"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Title="{Binding Title.Value}" Height="450" Width="800" MinHeight="450" MinWidth="800" >
     <Window.Resources>
@@ -74,11 +75,11 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="BPM" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBox Grid.Column="1" Text="{Binding BPM.Value}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
+                    <xctk:IntegerUpDown Grid.Column="1" Value="{Binding BPM.Value}" Minimum="1" Maximum="320" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
                     <TextBlock Grid.Column="2" Text="LPB" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBox Grid.Column="3" Text="{Binding LPB.Value}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
+                    <xctk:IntegerUpDown Grid.Column="3" Value="{Binding LPB.Value}" Minimum="1" Maximum="8" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
                     <TextBlock Grid.Column="4" Text="Lane" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBox Grid.Column="5" Text="{Binding Lane.Value}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft" IsEnabled="{Binding IsEditable.Value}"/>
+                    <xctk:IntegerUpDown Grid.Column="5" Value="{Binding Lane.Value}" Minimum="1" Maximum="100" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft" IsEnabled="{Binding IsEditable.Value}"/>
                     <StackPanel Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                     </StackPanel>
@@ -173,8 +174,6 @@
                     </Canvas>
                     <Line X1="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding CurrentTimeSeconds.Value}}" X2="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding CurrentTimeSeconds.Value}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Red"/>
                     <Line X1="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding TotalTimeSeconds.Value}}" X2="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding TotalTimeSeconds.Value}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Green"/>
-                    <Line Stroke="Yellow"/>
-                    <Line Stroke="Yellow"/>
                 </Grid>
             </ScrollViewer>
             <Grid Grid.Row="2">

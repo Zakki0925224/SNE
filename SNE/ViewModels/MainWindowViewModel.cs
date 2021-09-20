@@ -30,12 +30,12 @@ namespace SNE.ViewModels
         public ReactiveProperty<double> CurrentTimeSeconds { get; set; }
         public ReactiveProperty<double> TotalTimeSeconds { get; set; }
         public ReactiveProperty<double> Volume { get; set; }
-        public ReactiveProperty<double> GridHeight { get; set; } = new ReactiveProperty<double>(10);
-        public ReactiveProperty<double> GridWidth { get; set; } = new ReactiveProperty<double>(10);
+        public ReactiveProperty<double> GridHeight { get; } = new ReactiveProperty<double>(10);
+        public ReactiveProperty<double> GridWidth { get; } = new ReactiveProperty<double>(10);
         public ReactiveProperty<Point> NoteGridLineSegment1 { get; set; } = new ReactiveProperty<Point>(new Point(0, 10));
         public ReactiveProperty<Point> NoteGridLineSegment2 { get; set; } = new ReactiveProperty<Point>(new Point(10, 10));
         public ReactiveProperty<Rect> NoteViewPort { get; set; } = new ReactiveProperty<Rect>(new Rect(0, 0, 10, 10));
-        public ReactiveProperty<double> BPM { get; set; } = new ReactiveProperty<double>(120);
+        public ReactiveProperty<int> BPM { get; set; } = new ReactiveProperty<int>(120);
         public ReactiveProperty<int> LPB { get; set; } = new ReactiveProperty<int>(1);
         public ReactiveProperty<int> Lane { get; set; } = new ReactiveProperty<int>(6);
         public ReactiveProperty<bool> ShowEasyNotes { get; set; } = new ReactiveProperty<bool>(true);
@@ -396,7 +396,7 @@ namespace SNE.ViewModels
                 var lane = new LaneText();
                 lane.Text = $"L: {i}";
                 lane.XPosition = 0;
-                lane.YPosition = GridHeight.Value * (i - 1);
+                lane.YPosition = GridHeight.Value * i - 7;
 
                 this.LaneTexts.Add(lane);
             }

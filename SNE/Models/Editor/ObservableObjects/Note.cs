@@ -16,16 +16,16 @@ namespace SNE.Models.Editor.ObservableModels
                 _difficultyLevel = value;
 
                 if (_difficultyLevel == 0)
-                    this.NoteColor = Colors.LightBlue;
+                    this.NoteColor = new SolidColorBrush(Colors.LightBlue);
 
                 else if (_difficultyLevel == 1)
-                    this.NoteColor = Colors.LightGreen;
+                    this.NoteColor = new SolidColorBrush(Colors.LightGreen);
 
                 else if (_difficultyLevel == 2)
-                    this.NoteColor = Colors.LightCoral;
+                    this.NoteColor = new SolidColorBrush(Colors.LightCoral);
             }
         }
 
-        public Color NoteColor { get; set; }
+        public Brush NoteColor { get; set; }
     }
 }

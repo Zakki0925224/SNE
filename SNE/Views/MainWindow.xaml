@@ -3,17 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:views="clr-namespace:SNE.Views"
-        xmlns:Converters="clr-namespace:SNE.Models.Converters" 
+        xmlns:converters="clr-namespace:SNE.Models.Converters" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:rp="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.WPF"
         xmlns:qc="http://QuickConverter.CodePlex.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Title="{Binding Title.Value}" Height="450" Width="800" MinHeight="450" MinWidth="800" >
     <Window.Resources>
-        <Converters:ConvertSecondToXcoordinate x:Key="ConvertSecondToXcoordinate"/>
-        <Converters:ConvertBPMToSecond x:Key="ConvertBPMToSecond"/>
-        <Converters:EventConverter x:Key="EventConverter"/>
-        <Converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
+        <converters:EventConverter x:Key="EventConverter"/>
         <DrawingBrush x:Key="gridBrush"
                       Viewport="{Binding NoteViewPort.Value}"
                       ViewportUnits="Absolute"
@@ -27,7 +24,7 @@
                                 <LineSegment Point="{Binding NoteGridLineSegment2.Value}"/>
                             </PathFigure>
                             <PathGeometry.Transform>
-                                <ScaleTransform ScaleX="{Binding BPM.Value, Converter={StaticResource ConvertBPMToSecond}}" ScaleY="{qc:Binding '$P / 2', ConvertBack='$value * 2', P={Binding GridHeight.Value}}"/>
+                                <ScaleTransform ScaleX="{qc:Binding  '600 / $P', ConvertBack='600 * $value', P={Binding BPM.Value}}" ScaleY="{qc:Binding '$P / 2', ConvertBack='$value * 2', P={Binding GridHeight.Value}}"/>
                             </PathGeometry.Transform>
                         </PathGeometry>
                     </GeometryDrawing.Geometry>
@@ -97,27 +94,27 @@
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseRightButtonDown">
                                 <rp:EventToReactiveCommand Command="{Binding Editor_MouseRightButtonDown}">
-                                    <Converters:EventConverter/>
+                                    <converters:EventConverter/>
                                 </rp:EventToReactiveCommand>
                             </i:EventTrigger>
                             <i:EventTrigger EventName="MouseLeftButtonDown">
                                 <rp:EventToReactiveCommand Command="{Binding Editor_MouseLeftButtonDown}">
-                                    <Converters:EventConverter/>
+                                    <converters:EventConverter/>
                                 </rp:EventToReactiveCommand>
                             </i:EventTrigger>
                             <i:EventTrigger EventName="MouseMove">
                                 <rp:EventToReactiveCommand Command="{Binding Editor_MouseMoved}">
-                                    <Converters:EventConverter/>
+                                    <converters:EventConverter/>
                                 </rp:EventToReactiveCommand>
                             </i:EventTrigger>
                             <i:EventTrigger EventName="MouseLeave">
                                 <rp:EventToReactiveCommand Command="{Binding Editor_MouseLeaved}">
-                                    <Converters:EventConverter/>
+                                    <converters:EventConverter/>
                                 </rp:EventToReactiveCommand>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <Canvas.RenderTransform>
-                            <ScaleTransform ScaleX="{Binding BPM.Value, Converter={StaticResource ConvertBPMToSecond}}" ScaleY="{qc:Binding '$P / 2', ConvertBack='$value * 2', P={Binding GridHeight.Value}}"/>
+                            <ScaleTransform ScaleX="{qc:Binding  '600 / $P', ConvertBack='600 * $value', P={Binding BPM.Value}}" ScaleY="{qc:Binding '$P / 2', ConvertBack='$value * 2', P={Binding GridHeight.Value}}"/>
                         </Canvas.RenderTransform>
                         <ItemsControl ItemsSource="{Binding LaneTexts}">
                             <ItemsControl.ItemsPanel>
@@ -163,7 +160,7 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Rectangle Width="5" Height="5" Fill="{Binding NoteColor, Converter={StaticResource ColorToBrushConverter}}"/>
+                                    <Rectangle Width="5" Height="5" Fill="{Binding NoteColor}"/>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                             <ItemsControl.ItemContainerStyle>
@@ -174,8 +171,8 @@
                             </ItemsControl.ItemContainerStyle>
                         </ItemsControl>
                     </Canvas>
-                    <Line X1="{Binding CurrentTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" X2="{Binding CurrentTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Red"/>
-                    <Line X1="{Binding TotalTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" X2="{Binding TotalTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Green"/>
+                    <Line X1="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding CurrentTimeSeconds.Value}}" X2="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding CurrentTimeSeconds.Value}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Red"/>
+                    <Line X1="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding TotalTimeSeconds.Value}}" X2="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding TotalTimeSeconds.Value}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Green"/>
                     <Line Stroke="Yellow"/>
                     <Line Stroke="Yellow"/>
                 </Grid>

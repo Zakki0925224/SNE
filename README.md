@@ -48,6 +48,7 @@
 * .NET Core 3.1 WPF
 
 ## Libraries
+* Extended.Wpf.Toolkit
 * Prism.Unity
 * ReactiveProperty
 * NAudio

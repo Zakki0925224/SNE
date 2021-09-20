@@ -52,6 +52,7 @@
 * ReactiveProperty
 * NAudio
 * Newtonsoft.Json
+* QuickConverter
 
 ## Latest Download
 * [Latest Download (for 64bit windows) - v0.3Alpha](https://github.com/Zakki0925224/SNE/releases/download/v0.3Alpha/SNE.zip)

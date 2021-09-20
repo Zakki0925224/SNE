@@ -6,6 +6,7 @@
         xmlns:Converters="clr-namespace:SNE.Models.Converters" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:rp="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.WPF"
+        xmlns:qc="http://QuickConverter.CodePlex.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Title="{Binding Title.Value}" Height="450" Width="800" MinHeight="450" MinWidth="800" >
     <Window.Resources>
@@ -14,7 +15,7 @@
         <Converters:EventConverter x:Key="EventConverter"/>
         <Converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
         <DrawingBrush x:Key="gridBrush"
-                      Viewport="0,0,10,10"
+                      Viewport="{Binding NoteViewPort.Value}"
                       ViewportUnits="Absolute"
                       TileMode="Tile">
             <DrawingBrush.Drawing>
@@ -22,11 +23,11 @@
                     <GeometryDrawing.Geometry>
                         <PathGeometry>
                             <PathFigure StartPoint="0,0">
-                                <LineSegment Point="0,10"/>
-                                <LineSegment Point="10,10"/>
+                                <LineSegment Point="{Binding NoteGridLineSegment1.Value}"/>
+                                <LineSegment Point="{Binding NoteGridLineSegment2.Value}"/>
                             </PathFigure>
                             <PathGeometry.Transform>
-                                <ScaleTransform ScaleX="{Binding BPM.Value, Converter={StaticResource ConvertBPMToSecond}}" ScaleY="{Binding GridHeight.Value}"/>
+                                <ScaleTransform ScaleX="{Binding BPM.Value, Converter={StaticResource ConvertBPMToSecond}}" ScaleY="{qc:Binding '$P / 2', ConvertBack='$value * 2', P={Binding GridHeight.Value}}"/>
                             </PathGeometry.Transform>
                         </PathGeometry>
                     </GeometryDrawing.Geometry>
@@ -66,6 +67,8 @@
                         <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="40"/>
                         <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="90"/>
                         <ColumnDefinition Width="60"/>
@@ -75,15 +78,17 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="BPM" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <TextBox Grid.Column="1" Text="{Binding BPM.Value}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
-                    <TextBlock Grid.Column="2" Text="Lane" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBox Grid.Column="3" Text="{Binding Lane.Value}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft" IsEnabled="{Binding IsEditable.Value}"/>
-                    <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                    <TextBlock Grid.Column="2" Text="LPB" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="3" Text="{Binding LPB.Value}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
+                    <TextBlock Grid.Column="4" Text="Lane" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="5" Text="{Binding Lane.Value}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft" IsEnabled="{Binding IsEditable.Value}"/>
+                    <StackPanel Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                     </StackPanel>
-                    <TextBlock Grid.Column="5" Text="DifficultyMode" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <RadioButton Grid.Column="6" Content="Easy" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowEasyNotes.Value}"/>
-                    <RadioButton Grid.Column="7" Content="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowNormalNotes.Value}"/>
-                    <RadioButton Grid.Column="8" Content="Hard" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowHardNotes.Value}"/>
+                    <TextBlock Grid.Column="7" Text="DifficultyMode" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <RadioButton Grid.Column="8" Content="Easy" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowEasyNotes.Value}"/>
+                    <RadioButton Grid.Column="9" Content="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowNormalNotes.Value}"/>
+                    <RadioButton Grid.Column="10" Content="Hard" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowHardNotes.Value}"/>
                 </Grid>
             </Grid>
             <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
@@ -112,7 +117,7 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <Canvas.RenderTransform>
-                            <ScaleTransform ScaleX="{Binding BPM.Value, Converter={StaticResource ConvertBPMToSecond}}" ScaleY="{Binding GridHeight.Value}"/>
+                            <ScaleTransform ScaleX="{Binding BPM.Value, Converter={StaticResource ConvertBPMToSecond}}" ScaleY="{qc:Binding '$P / 2', ConvertBack='$value * 2', P={Binding GridHeight.Value}}"/>
                         </Canvas.RenderTransform>
                         <ItemsControl ItemsSource="{Binding LaneTexts}">
                             <ItemsControl.ItemsPanel>
@@ -171,6 +176,8 @@
                     </Canvas>
                     <Line X1="{Binding CurrentTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" X2="{Binding CurrentTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Red"/>
                     <Line X1="{Binding TotalTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" X2="{Binding TotalTimeSeconds.Value, Converter={StaticResource ConvertSecondToXcoordinate}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Green"/>
+                    <Line Stroke="Yellow"/>
+                    <Line Stroke="Yellow"/>
                 </Grid>
             </ScrollViewer>
             <Grid Grid.Row="2">

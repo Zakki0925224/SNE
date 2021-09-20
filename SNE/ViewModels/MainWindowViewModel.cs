@@ -12,9 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 
 namespace SNE.ViewModels
@@ -30,8 +30,13 @@ namespace SNE.ViewModels
         public ReactiveProperty<double> CurrentTimeSeconds { get; set; }
         public ReactiveProperty<double> TotalTimeSeconds { get; set; }
         public ReactiveProperty<double> Volume { get; set; }
-        public ReactiveProperty<double> GridHeight { get; set; } = new ReactiveProperty<double>(5);
+        public ReactiveProperty<double> GridHeight { get; set; } = new ReactiveProperty<double>(10);
+        public ReactiveProperty<double> GridWidth { get; set; } = new ReactiveProperty<double>(10);
+        public ReactiveProperty<Point> NoteGridLineSegment1 { get; set; } = new ReactiveProperty<Point>(new Point(0, 10));
+        public ReactiveProperty<Point> NoteGridLineSegment2 { get; set; } = new ReactiveProperty<Point>(new Point(10, 10));
+        public ReactiveProperty<Rect> NoteViewPort { get; set; } = new ReactiveProperty<Rect>(new Rect(0, 0, 10, 10));
         public ReactiveProperty<double> BPM { get; set; } = new ReactiveProperty<double>(120);
+        public ReactiveProperty<int> LPB { get; set; } = new ReactiveProperty<int>(1);
         public ReactiveProperty<int> Lane { get; set; } = new ReactiveProperty<int>(6);
         public ReactiveProperty<bool> ShowEasyNotes { get; set; } = new ReactiveProperty<bool>(true);
         public ReactiveProperty<bool> ShowNormalNotes { get; set; } = new ReactiveProperty<bool>(false);
@@ -169,7 +174,7 @@ namespace SNE.ViewModels
 
                 if (jsonString == "")
                 {
-                    MessageBox.ShowErrorMessageBox("Failed to generate json data.");
+                    Models.Shell.MessageBox.ShowErrorMessageBox("Failed to generate json data.");
                     return;
                 }
 
@@ -211,105 +216,105 @@ namespace SNE.ViewModels
 
             this.Editor_MouseLeftButtonDown.Subscribe(x =>
             {
-                var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
-                var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
-                var noteXPos = Math.Floor(xPos / 10) * 10;
-                var noteYPos = Math.Floor(yPos / 10) * 10;
+                //var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
+                //var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
+                //var noteXPos = Math.Floor(xPos / 10) * 10;
+                //var noteYPos = Math.Floor(yPos / 10) * 10;
 
-                //Debug.Print("Clicked!");
+                ////Debug.Print("Clicked!");
 
-                if (meInstance.Cursor == Cursors.Hand && this.IsInitialized.Value)
-                {
-                    var index = -1;
-                    var level = -1;
+                //if (meInstance.Cursor == Cursors.Hand && this.IsInitialized.Value)
+                //{
+                //    var index = -1;
+                //    var level = -1;
 
-                    if (this.ShowEasyNotes.Value) level = 0;
-                    else if (this.ShowNormalNotes.Value) level = 1;
-                    else if (this.ShowHardNotes.Value) level = 2;
+                //    if (this.ShowEasyNotes.Value) level = 0;
+                //    else if (this.ShowNormalNotes.Value) level = 1;
+                //    else if (this.ShowHardNotes.Value) level = 2;
 
-                    for (int i = 0; i < this.Notes.Count; i++)
-                    {
-                        if (this.Notes[i].XPosition == noteXPos &&
-                            this.Notes[i].YPosition == noteYPos &&
-                            this.Notes[i].DifficultyLevel == level)
-                            index = i;
-                    }
+                //    for (int i = 0; i < this.Notes.Count; i++)
+                //    {
+                //        if (this.Notes[i].XPosition == noteXPos &&
+                //            this.Notes[i].YPosition == noteYPos &&
+                //            this.Notes[i].DifficultyLevel == level)
+                //            index = i;
+                //    }
 
-                    if (index == -1)
-                    {
-                        var note = new Note
-                        {
-                            XPosition = noteXPos,
-                            YPosition = noteYPos,
-                            DifficultyLevel = level
-                        };
+                //    if (index == -1)
+                //    {
+                //        var note = new Note
+                //        {
+                //            XPosition = noteXPos,
+                //            YPosition = noteYPos,
+                //            DifficultyLevel = level
+                //        };
 
-                        this.Notes.Add(note);
-                        UpdateNotesUI();
-                    }
-                }
-                else if (meInstance.Cursor != Cursors.Hand && this.IsInitialized.Value)
-                {
-                    //var sec = ConvertXcoordinateToSecond.Convert(xPos);
-                    //this.CurrentTimeSeconds.Value = sec;
-                }
+                //        this.Notes.Add(note);
+                //        UpdateNotesUI();
+                //    }
+                //}
+                //else if (meInstance.Cursor != Cursors.Hand && this.IsInitialized.Value)
+                //{
+                //    //var sec = ConvertXcoordinateToSecond.Convert(xPos);
+                //    //this.CurrentTimeSeconds.Value = sec;
+                //}
             });
 
             this.Editor_MouseRightButtonDown.Subscribe(x =>
             {
-                var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
-                var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
-                var noteXPos = Math.Floor(xPos / 10) * 10;
-                var noteYPos = Math.Floor(yPos / 10) * 10;
+                //var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
+                //var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
+                //var noteXPos = Math.Floor(xPos / 10) * 10;
+                //var noteYPos = Math.Floor(yPos / 10) * 10;
 
-                var level = -1;
+                //var level = -1;
 
-                if (this.ShowEasyNotes.Value) level = 0;
-                else if (this.ShowNormalNotes.Value) level = 1;
-                else if (this.ShowHardNotes.Value) level = 2;
+                //if (this.ShowEasyNotes.Value) level = 0;
+                //else if (this.ShowNormalNotes.Value) level = 1;
+                //else if (this.ShowHardNotes.Value) level = 2;
 
-                //Debug.Print("Right clicked!");
+                ////Debug.Print("Right clicked!");
 
-                if (meInstance.Cursor == Cursors.Hand && this.IsInitialized.Value)
-                {
-                    int index = -1;
+                //if (meInstance.Cursor == Cursors.Hand && this.IsInitialized.Value)
+                //{
+                //    int index = -1;
 
-                    for (int i = 0; i < this.Notes.Count; i++)
-                    {
-                        if (this.Notes[i].XPosition == noteXPos &&
-                            this.Notes[i].YPosition == noteYPos &&
-                            this.Notes[i].DifficultyLevel == level)
-                            index = i;
-                    }
+                //    for (int i = 0; i < this.Notes.Count; i++)
+                //    {
+                //        if (this.Notes[i].XPosition == noteXPos &&
+                //            this.Notes[i].YPosition == noteYPos &&
+                //            this.Notes[i].DifficultyLevel == level)
+                //            index = i;
+                //    }
 
-                    if (index != -1)
-                    {
-                        this.Notes.RemoveAt(index);
-                        UpdateNotesUI();
-                    }
-                }
+                //    if (index != -1)
+                //    {
+                //        this.Notes.RemoveAt(index);
+                //        UpdateNotesUI();
+                //    }
+                //}
             });
 
             this.Editor_MouseMoved.Subscribe(x =>
             {
-                var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
-                var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
-                //Debug.Print($"X:{xPos}, Y:{yPos}");
-                //Debug.Print($"X:{xPos} % 10 = {xPos % 10}");
-                //Debug.Print($"Y:{yPos} % 10 = {yPos % 10}");
+                //var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
+                //var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
+                ////Debug.Print($"X:{xPos}, Y:{yPos}");
+                ////Debug.Print($"X:{xPos} % 10 = {xPos % 10}");
+                ////Debug.Print($"Y:{yPos} % 10 = {yPos % 10}");
 
-                if (yPos > this.GridHeight.Value * 2 &&
-                    yPos < this.GridHeight.Value * (this.Lane.Value + 1) * 2 &&
-                    xPos % 10 < 5 &&
-                    yPos % (this.GridHeight.Value * 2) < 5 &&
-                    this.IsInitialized.Value)
-                {
-                    meInstance.Cursor = Cursors.Hand;
-                }
-                else
-                {
-                    meInstance.Cursor = Cursors.Arrow;
-                }
+                //if (yPos > this.GridHeight.Value &&
+                //    yPos < this.GridHeight.Value * (this.Lane.Value + 1) &&
+                //    xPos % (this.GridWidth.Value / this.LPB.Value) < 5 &&
+                //    yPos % this.GridHeight.Value < 5 &&
+                //    this.IsInitialized.Value)
+                //{
+                //    meInstance.Cursor = Cursors.Hand;
+                //}
+                //else
+                //{
+                //    meInstance.Cursor = Cursors.Arrow;
+                //}
             });
 
             this.Editor_MouseLeaved.Subscribe(_ => 
@@ -323,7 +328,7 @@ namespace SNE.ViewModels
                 var desc = AssemblyInfo.GetAssemblyDescription();
                 var version = AssemblyInfo.GetAssembryVersion();
                 var copyright = AssemblyInfo.GetAssemblyCopyright();
-                MessageBox.ShowInfoMessageBox($"{title}\n{version}\n{desc}\n{copyright}");
+                Models.Shell.MessageBox.ShowInfoMessageBox($"{title}\n{version}\n{desc}\n{copyright}");
             });
 
             this.Lane.Subscribe(_ =>
@@ -346,6 +351,21 @@ namespace SNE.ViewModels
             {
                 UpdateNotesUI();
             });
+
+            this.LPB.Subscribe(_ =>
+            {
+                this.UpdateGridUI();
+            });
+
+            this.GridWidth.Subscribe(_ =>
+            {
+                this.UpdateGridUI();
+            });
+
+            this.GridHeight.Subscribe(_ =>
+            {
+                this.UpdateGridUI();
+            });
         }
 
         private void InitializeEditor(string audioFilePath)
@@ -362,7 +382,7 @@ namespace SNE.ViewModels
             }
             else
             {
-                MessageBox.ShowErrorMessageBox($"\"{audioFilePath}\" was not found.");
+                Models.Shell.MessageBox.ShowErrorMessageBox($"\"{audioFilePath}\" was not found.");
                 this.IsInitialized.Value = false;
             }
         }
@@ -376,7 +396,7 @@ namespace SNE.ViewModels
                 var lane = new LaneText();
                 lane.Text = $"L: {i}";
                 lane.XPosition = 0;
-                lane.YPosition = GridHeight.Value * (2 * i - 1);
+                lane.YPosition = GridHeight.Value * (i - 1);
 
                 this.LaneTexts.Add(lane);
             }
@@ -389,7 +409,7 @@ namespace SNE.ViewModels
 
             for (int i = 0; i <= this.TotalTimeSeconds.Value * 100; i++)
             {
-                if (i % 10 == 0)
+                if (i % GridWidth.Value == 0)
                 {
                     var bpm = new BPMText();
                     bpm.Text = cnt.ToString();
@@ -426,6 +446,15 @@ namespace SNE.ViewModels
                     continue;
                 }
             }
+        }
+
+        private void UpdateGridUI()
+        {
+            var height = this.GridHeight.Value;
+            var lpbToX = this.GridWidth.Value / this.LPB.Value;
+            this.NoteGridLineSegment1.Value = new Point(0, height);
+            this.NoteGridLineSegment2.Value = new Point(lpbToX, height);
+            this.NoteViewPort.Value = new Rect(0, 0, lpbToX, height);
         }
     }
 }

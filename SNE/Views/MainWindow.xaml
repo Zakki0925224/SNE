@@ -108,11 +108,6 @@
                                     <converters:EventConverter/>
                                 </rp:EventToReactiveCommand>
                             </i:EventTrigger>
-                            <i:EventTrigger EventName="MouseLeave">
-                                <rp:EventToReactiveCommand Command="{Binding Editor_MouseLeaved}">
-                                    <converters:EventConverter/>
-                                </rp:EventToReactiveCommand>
-                            </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <Canvas.RenderTransform>
                             <ScaleTransform ScaleX="{qc:Binding  '600 / $P', ConvertBack='600 * $value', P={Binding BPM.Value}}" ScaleY="{qc:Binding '$P / 2', ConvertBack='$value * 2', P={Binding GridHeight.Value}}"/>
@@ -161,13 +156,39 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Rectangle Width="5" Height="5" Fill="{Binding NoteColor}"/>
+                                    <Rectangle Width="{Binding Size}" Height="{Binding Size}" Fill="{Binding NoteColor}">
+                                        <Rectangle.RenderTransform>
+                                            <TranslateTransform X="{qc:Binding  '-($P / 2)', ConvertBack='$value * -2', P={Binding Size}}" Y="{qc:Binding  '-($P / 2)', ConvertBack='$value * -2', P={Binding Size}}"/>
+                                        </Rectangle.RenderTransform>
+                                    </Rectangle>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                             <ItemsControl.ItemContainerStyle>
                                 <Style TargetType="{x:Type ContentPresenter}">
                                     <Setter Property="Canvas.Top" Value="{Binding YPosition}"/>
                                     <Setter Property="Canvas.Left" Value="{Binding XPosition}"/>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
+                        <ItemsControl ItemsSource="{Binding MousePointers}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas IsItemsHost="True" Background="Transparent"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Rectangle Fill="Yellow" Height="{Binding Size}" Width="{Binding Size}">
+                                        <Rectangle.RenderTransform>
+                                            <TranslateTransform X="{qc:Binding  '-($P / 2)', ConvertBack='$value * -2', P={Binding Size}}" Y="{qc:Binding  '-($P / 2)', ConvertBack='$value * -2', P={Binding Size}}"/>
+                                        </Rectangle.RenderTransform>
+                                    </Rectangle>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="{x:Type ContentPresenter}">
+                                    <Setter Property="Canvas.Top" Value="{Binding YPosition}" />
+                                    <Setter Property="Canvas.Left" Value="{Binding XPosition}" />
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
                         </ItemsControl>

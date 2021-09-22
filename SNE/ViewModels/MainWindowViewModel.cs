@@ -37,7 +37,7 @@ namespace SNE.ViewModels
         public ReactiveProperty<Point> NoteGridLineSegment1 { get; set; } = new ReactiveProperty<Point>(new Point(0, 10));
         public ReactiveProperty<Point> NoteGridLineSegment2 { get; set; } = new ReactiveProperty<Point>(new Point(10, 10));
         public ReactiveProperty<Rect> NoteViewPort { get; set; } = new ReactiveProperty<Rect>(new Rect(0, 0, 10, 10));
-        public ReactiveProperty<double> NoteSize { get; set; } = new ReactiveProperty<double>(3);
+        public ReactiveProperty<int> NoteSize { get; set; } = new ReactiveProperty<int>(2);
         public ReactiveProperty<int> BPM { get; set; } = new ReactiveProperty<int>(120);
         public ReactiveProperty<int> LPB { get; set; } = new ReactiveProperty<int>(1);
         public ReactiveProperty<int> Lane { get; set; } = new ReactiveProperty<int>(6);
@@ -225,6 +225,9 @@ namespace SNE.ViewModels
 
             this.Editor_MouseLeftButtonDown.Subscribe(x =>
             {
+                if (!this.IsInitialized.Value)
+                    return;
+
                 var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
                 var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
 
@@ -263,6 +266,9 @@ namespace SNE.ViewModels
 
             this.Editor_MouseRightButtonDown.Subscribe(x =>
             {
+                if (!this.IsInitialized.Value)
+                    return;
+
                 var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
                 var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
 
@@ -292,6 +298,9 @@ namespace SNE.ViewModels
 
             this.Editor_MouseMoved.Subscribe(x =>
             {
+                if (!this.IsInitialized.Value)
+                    return;
+
                 var xPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).X;
                 var yPos = ((MouseEventArgs)x.e).GetPosition((System.Windows.IInputElement)x.sender).Y;
                 //Debug.Print($"X:{xPos}, Y:{yPos}");
@@ -342,17 +351,22 @@ namespace SNE.ViewModels
 
             this.LPB.Subscribe(_ =>
             {
-                this.UpdateGridUI();
+                UpdateGridUI();
             });
 
             this.GridWidth.Subscribe(_ =>
             {
-                this.UpdateGridUI();
+                UpdateGridUI();
             });
 
             this.GridHeight.Subscribe(_ =>
             {
-                this.UpdateGridUI();
+                UpdateGridUI();
+            });
+
+            this.NoteSize.Subscribe(_ =>
+            {
+                UpdateNotesUI();
             });
         }
 
@@ -429,6 +443,8 @@ namespace SNE.ViewModels
 
             foreach (var note in this.Notes)
             {
+                note.Size = this.NoteSize.Value;
+
                 if (this.ShowEasyNotes.Value && note.DifficultyLevel == 0)
                 {
                     this.FilteredNotes.Add(note);
@@ -464,7 +480,8 @@ namespace SNE.ViewModels
             var pointer = new MousePointer
             {
                 XPosition = xPos,
-                YPosition = yPos
+                YPosition = yPos,
+                Size = this.NoteSize.Value
             };
             this.MousePointers.Add(pointer);
         }

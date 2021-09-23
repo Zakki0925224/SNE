@@ -452,8 +452,8 @@ namespace SNE.ViewModels
                     var bpm = new BPMText
                     {
                         Text = cnt.ToString(),
-                        XPosition = i + 4,
-                        YPosition = 1
+                        XPosition = i + 3,
+                        YPosition = 0.5
                     };
 
                     this.BPMTexts.Add(bpm);

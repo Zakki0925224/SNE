@@ -8,8 +8,8 @@
 **ロングノーツ・スライドノーツ等**には対応していません。
 
 ## ScreenShots
-![](https://user-images.githubusercontent.com/49384910/133747964-ffec1d67-ce29-4fb6-b84a-82bde2c663f3.png)
-![](https://user-images.githubusercontent.com/49384910/133747966-c8acccc1-4b69-49aa-81a6-88e4b08bbafe.png)
+![](https://user-images.githubusercontent.com/49384910/134484873-7642c493-ecfe-42d4-8ec8-145936c5b31d.png)
+![](https://user-images.githubusercontent.com/49384910/134484960-0bb23b40-a121-4c0e-8a1d-3a7cecb4f04d.png)
 * 水平方向の拡大率を利用しているため、BPM値を変更すると横幅が縮小・拡大されます
 
 ## Exported musical score sample

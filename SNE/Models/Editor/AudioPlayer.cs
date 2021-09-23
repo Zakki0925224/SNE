@@ -1,8 +1,6 @@
 ﻿using NAudio.Wave;
 using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Timers;
 
 namespace SNE.Models.Editor
 {
@@ -11,7 +9,6 @@ namespace SNE.Models.Editor
         public event PropertyChangedEventHandler PropertyChanged;
         private Mp3FileReader AudioFileReader { get; set; }
         private WaveOut WaveOut { get; set; } = new WaveOut();
-        private Timer Timer { get; set; }
 
         public bool IsInitialized { get; set; } = false;
         public bool IsPlaying
@@ -87,29 +84,9 @@ namespace SNE.Models.Editor
             this.WaveOut = new WaveOut();
             this.WaveOut.Init(this.AudioFileReader);
             this.Volume = 0.1;
-
-            TimerInitialize();
-
             this.IsInitialized = true;
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(""));
-        }
-
-        private void TimerInitialize()
-        {
-            this.Timer = new Timer(100);
-            this.Timer.AutoReset = true;
-            this.Timer.Elapsed += Timer_Elapsed;
-
-        }
-
-        private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            await Task.Run(() =>
-            {
-                if (this.IsPlaying)
-                    this.CurrentTimeSeconds = this.AudioFileReader.CurrentTime.TotalSeconds;
-            });
         }
 
         public void Dispose()
@@ -122,19 +99,13 @@ namespace SNE.Models.Editor
         public void Play()
         {
             if (this.IsInitialized)
-            {
                 this.WaveOut.Play();
-                this.Timer.Start();
-            }
         }
 
         public void Pause()
         {
             if (this.IsInitialized)
-            {
                 this.WaveOut.Pause();
-                this.Timer.Stop();
-            }
         }
 
         public void Stop()

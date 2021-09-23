@@ -16,6 +16,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 
@@ -25,6 +27,7 @@ namespace SNE.ViewModels
     {
         // models
         private MainWindow meInstance = App.Current.MainWindow as MainWindow;
+        private Timer Timer { get; set; }
         public AudioPlayer AudioPlayer { get; set; } = new AudioPlayer();
 
         // reactive properties
@@ -215,10 +218,18 @@ namespace SNE.ViewModels
             this.AudioPlayerPlayPauseButton_Clicked.Subscribe(_ =>
             {
                 if (this.AudioPlayer.IsPlaying)
+                {
                     this.AudioPlayer.Pause();
+                    if (this.IsInitialized.Value)
+                        this.Timer.Stop();
+                }
 
                 else
+                {
                     this.AudioPlayer.Play();
+                    if (this.IsInitialized.Value)
+                        this.Timer.Start();
+                }
             });
 
             this.AudioPlayerBackButton_Clicked.Subscribe(_ =>
@@ -391,6 +402,7 @@ namespace SNE.ViewModels
                 this.TitleString.Value = Path.GetFileNameWithoutExtension(audioFilePath);
                 this.Notes.Clear();
                 RaisePropertyChanged();
+                TimerInitialize();
                 this.IsInitialized.Value = true;
             }
             else
@@ -497,6 +509,23 @@ namespace SNE.ViewModels
                 Size = this.NoteSize.Value
             };
             this.MousePointers.Add(pointer);
+        }
+
+        private void TimerInitialize()
+        {
+            this.Timer = new Timer(50);
+            this.Timer.AutoReset = true;
+            this.Timer.Elapsed += Timer_Elapsed;
+
+        }
+
+        private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            await Task.Run(() =>
+            {
+                if (this.AudioPlayer.IsPlaying)
+                    this.CurrentTimeSeconds.Value = this.AudioPlayer.CurrentTimeSeconds;
+            });
         }
     }
 }

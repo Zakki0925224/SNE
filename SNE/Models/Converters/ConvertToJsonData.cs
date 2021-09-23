@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using SNE.Models.Editor;
 using SNE.Models.Editor.DataModels;
 using SNE.Models.Editor.ObservableModels;
 using System;
@@ -13,7 +12,8 @@ namespace SNE.Models.Converters
                                                  string description,
                                                  List<Note> notes,
                                                  double gridHeight,
-                                                 double BPM)
+                                                 double BPM,
+                                                 double offset)
         {
             var data = new JsonDataModel();
             data.Title = title;
@@ -25,7 +25,7 @@ namespace SNE.Models.Converters
             foreach (var note in notes)
             {
                 var noteData = new NoteDataModel();
-                noteData.Time = ConvertXPositionToSecond(note.XPosition, BPM);
+                noteData.Time = ConvertXPositionToSecond(note.XPosition, BPM) - (offset / 100);
                 noteData.LaneID = ConvertYPositionToLaneID(note.YPosition, gridHeight);
                 noteData.IsActionNote = false;
                 noteData.DifficultyLevel = note.DifficultyLevel;

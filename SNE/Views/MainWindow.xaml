@@ -2,7 +2,6 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
-        xmlns:views="clr-namespace:SNE.Views"
         xmlns:converters="clr-namespace:SNE.Models.Converters" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:rp="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.WPF"
@@ -67,6 +66,8 @@
                         <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="40"/>
                         <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="60"/>
                         <ColumnDefinition Width="50"/>
@@ -82,15 +83,17 @@
                     <xctk:IntegerUpDown Grid.Column="3" Value="{Binding LPB.Value}" Minimum="1" Maximum="8" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
                     <TextBlock Grid.Column="4" Text="Lane" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <xctk:IntegerUpDown Grid.Column="5" Value="{Binding Lane.Value}" Minimum="1" Maximum="50" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft" IsEnabled="{Binding IsEditable.Value}"/>
-                    <StackPanel Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                    <TextBlock Grid.Column="6" Text="Offset" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <xctk:IntegerUpDown Grid.Column="7" Value="{Binding Offset.Value}" Minimum="0" Maximum="100" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
+                    <StackPanel Grid.Column="8" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                     </StackPanel>
-                    <TextBlock Grid.Column="7" Text="ViewSize" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <xctk:IntegerUpDown Grid.Column="8" Value="{Binding NoteSize.Value}" Minimum="1" Maximum="6" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
-                    <TextBlock Grid.Column="9" Text="DifficultyMode" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <RadioButton Grid.Column="10" Content="Easy" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowEasyNotes.Value}"/>
-                    <RadioButton Grid.Column="11" Content="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowNormalNotes.Value}"/>
-                    <RadioButton Grid.Column="12" Content="Hard" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowHardNotes.Value}"/>
+                    <TextBlock Grid.Column="9" Text="ViewSize" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <xctk:IntegerUpDown Grid.Column="10" Value="{Binding NoteSize.Value}" Minimum="1" Maximum="6" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
+                    <TextBlock Grid.Column="11" Text="DifficultyMode" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <RadioButton Grid.Column="12" Content="Easy" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowEasyNotes.Value}"/>
+                    <RadioButton Grid.Column="13" Content="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowNormalNotes.Value}"/>
+                    <RadioButton Grid.Column="14" Content="Hard" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowHardNotes.Value}"/>
                 </Grid>
             </Grid>
             <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
@@ -202,7 +205,7 @@
                             </ItemsControl.ItemContainerStyle>
                         </ItemsControl>
                     </Canvas>
-                    <Line X1="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding CurrentTimeSeconds.Value}}" X2="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding CurrentTimeSeconds.Value}}" Y1="0" Y2="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Stroke="Red"/>
+                    <Line X1="{qc:MultiBinding '$P0 * 100 + + $P1', P0={Binding CurrentTimeSeconds.Value}, P1={Binding Offset.Value}}" X2="{qc:MultiBinding '$P0 * 100 + + $P1', P0={Binding CurrentTimeSeconds.Value}, P1={Binding Offset.Value}}" Y1="0" Y2="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Stroke="Red"/>
                     <Line X1="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding TotalTimeSeconds.Value}}" X2="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding TotalTimeSeconds.Value}}" Y1="0" Y2="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Stroke="Green"/>
                     <Line X1="0" X2="1" Y1="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Y2="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Stroke="Orange"/>
                 </Grid>

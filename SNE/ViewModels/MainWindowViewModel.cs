@@ -41,6 +41,7 @@ namespace SNE.ViewModels
         public ReactiveProperty<int> BPM { get; set; } = new ReactiveProperty<int>(120);
         public ReactiveProperty<int> LPB { get; set; } = new ReactiveProperty<int>(1);
         public ReactiveProperty<int> Lane { get; set; } = new ReactiveProperty<int>(6);
+        public ReactiveProperty<int> Offset { get; set; } = new ReactiveProperty<int>(0);
         public ReactiveProperty<bool> ShowEasyNotes { get; set; } = new ReactiveProperty<bool>(true);
         public ReactiveProperty<bool> ShowNormalNotes { get; set; } = new ReactiveProperty<bool>(false);
         public ReactiveProperty<bool> ShowHardNotes { get; set; } = new ReactiveProperty<bool>(false);
@@ -146,6 +147,7 @@ namespace SNE.ViewModels
 
                     this.BPM.Value = dataModel.BPM.Value;
                     this.Lane.Value = dataModel.Lane.Value;
+                    this.Offset.Value = dataModel.Offset.Value;
                     this.TitleString.Value = dataModel.Title;
                     this.DescString.Value = dataModel.Description;
 
@@ -168,14 +170,18 @@ namespace SNE.ViewModels
 
                 var audioFilePath = this.AudioPlayer.AudioFilePath;
                 var bpm = this.BPM.Value;
+                var lpb = this.LPB.Value;
                 var lane = this.Lane.Value;
+                var offset = this.Offset.Value;
                 var title = this.TitleString.Value;
                 var desc = this.DescString.Value;
                 var notes = new List<Note>(this.Notes);
 
                 var model = new ExportDataModel(audioFilePath,
                                                 bpm,
+                                                lpb,
                                                 lane,
+                                                offset,
                                                 title,
                                                 desc,
                                                 notes);
@@ -194,7 +200,7 @@ namespace SNE.ViewModels
 
             this.MenuItemFileExportJSONFile_Clicked.Subscribe(_ =>
             {
-                var jsonString = ConvertToJsonData.ConvertToExportJson(this.TitleString.Value, this.DescString.Value, new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value);
+                var jsonString = ConvertToJsonData.ConvertToExportJson(this.TitleString.Value, this.DescString.Value, new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value, this.Offset.Value);
                 var fileName = FileDialog.ShowSaveFileDialog("JSON File (*.json)|*.json", "Save JSON File...", true);
 
                 if (fileName != "")

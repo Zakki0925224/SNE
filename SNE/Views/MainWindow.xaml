@@ -206,7 +206,7 @@
                         </ItemsControl>
                     </Canvas>
                     <Line X1="{qc:MultiBinding '$P0 * 100 + + $P1', P0={Binding CurrentTimeSeconds.Value}, P1={Binding Offset.Value}}" X2="{qc:MultiBinding '$P0 * 100 + + $P1', P0={Binding CurrentTimeSeconds.Value}, P1={Binding Offset.Value}}" Y1="0" Y2="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Stroke="Red"/>
-                    <Line X1="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding TotalTimeSeconds.Value}}" X2="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding TotalTimeSeconds.Value}}" Y1="0" Y2="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Stroke="Green"/>
+                    <Line X1="{qc:MultiBinding '$P0 * 100 + + $P1', P0={Binding TotalTimeSeconds.Value}, P1={Binding Offset.Value}}" X2="{qc:MultiBinding '$P0 * 100 + + $P1', P0={Binding TotalTimeSeconds.Value}, P1={Binding Offset.Value}}" Y1="0" Y2="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Stroke="Green"/>
                     <Line X1="0" X2="1" Y1="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Y2="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Stroke="Orange"/>
                 </Grid>
             </ScrollViewer>

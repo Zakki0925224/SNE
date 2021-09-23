@@ -81,7 +81,7 @@
                     <TextBlock Grid.Column="2" Text="LPB" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <xctk:IntegerUpDown Grid.Column="3" Value="{Binding LPB.Value}" Minimum="1" Maximum="8" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
                     <TextBlock Grid.Column="4" Text="Lane" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <xctk:IntegerUpDown Grid.Column="5" Value="{Binding Lane.Value}" Minimum="1" Maximum="100" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft" IsEnabled="{Binding IsEditable.Value}"/>
+                    <xctk:IntegerUpDown Grid.Column="5" Value="{Binding Lane.Value}" Minimum="1" Maximum="50" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft" IsEnabled="{Binding IsEditable.Value}"/>
                     <StackPanel Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"/>
                     </StackPanel>
@@ -109,6 +109,11 @@
                             </i:EventTrigger>
                             <i:EventTrigger EventName="MouseMove">
                                 <rp:EventToReactiveCommand Command="{Binding Editor_MouseMoved}">
+                                    <converters:EventConverter/>
+                                </rp:EventToReactiveCommand>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseLeave">
+                                <rp:EventToReactiveCommand Command="{Binding Editor_MouseLeaved}">
                                     <converters:EventConverter/>
                                 </rp:EventToReactiveCommand>
                             </i:EventTrigger>
@@ -152,28 +157,6 @@
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
                         </ItemsControl>
-                        <ItemsControl ItemsSource="{Binding MousePointers}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <Canvas/>
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Rectangle Width="{Binding Size}" Height="{Binding Size}" Fill="Yellow">
-                                        <Rectangle.RenderTransform>
-                                            <TranslateTransform X="{qc:Binding  '-($P / 2)', ConvertBack='$value * -2', P={Binding Size}}" Y="{qc:Binding  '-($P / 2)', ConvertBack='$value * -2', P={Binding Size}}"/>
-                                        </Rectangle.RenderTransform>
-                                    </Rectangle>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                            <ItemsControl.ItemContainerStyle>
-                                <Style TargetType="{x:Type ContentPresenter}">
-                                    <Setter Property="Canvas.Top" Value="{Binding YPosition}"/>
-                                    <Setter Property="Canvas.Left" Value="{Binding XPosition}"/>
-                                </Style>
-                            </ItemsControl.ItemContainerStyle>
-                        </ItemsControl>
                         <ItemsControl ItemsSource="{Binding FilteredNotes}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -196,9 +179,32 @@
                                 </Style>
                             </ItemsControl.ItemContainerStyle>
                         </ItemsControl>
+                        <ItemsControl ItemsSource="{Binding MousePointers}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Rectangle Width="{Binding Size}" Height="{Binding Size}" Fill="Yellow">
+                                        <Rectangle.RenderTransform>
+                                            <TranslateTransform X="{qc:Binding  '-($P / 2)', ConvertBack='$value * -2', P={Binding Size}}" Y="{qc:Binding  '-($P / 2)', ConvertBack='$value * -2', P={Binding Size}}"/>
+                                        </Rectangle.RenderTransform>
+                                    </Rectangle>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="{x:Type ContentPresenter}">
+                                    <Setter Property="Canvas.Top" Value="{Binding YPosition}"/>
+                                    <Setter Property="Canvas.Left" Value="{Binding XPosition}"/>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                        </ItemsControl>
                     </Canvas>
-                    <Line X1="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding CurrentTimeSeconds.Value}}" X2="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding CurrentTimeSeconds.Value}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Red"/>
-                    <Line X1="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding TotalTimeSeconds.Value}}" X2="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding TotalTimeSeconds.Value}}" Y1="0" Y2="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:MainWindow}}}" Stroke="Green"/>
+                    <Line X1="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding CurrentTimeSeconds.Value}}" X2="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding CurrentTimeSeconds.Value}}" Y1="0" Y2="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Stroke="Red"/>
+                    <Line X1="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding TotalTimeSeconds.Value}}" X2="{qc:Binding '$P * 100',  ConvertBack='$value / 100', P={Binding TotalTimeSeconds.Value}}" Y1="0" Y2="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Stroke="Green"/>
+                    <Line X1="0" X2="1" Y1="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Y2="{qc:MultiBinding '$P0 * $P1 * 5 + $P0', P0={Binding GridHeight.Value}, P1={Binding Lane.Value}}" Stroke="Orange"/>
                 </Grid>
             </ScrollViewer>
             <Grid Grid.Row="2">

@@ -58,6 +58,7 @@ namespace SNE.ViewModels
         public ReactiveCommand AudioPlayerBackButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerForwardButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand<(object sender, EventArgs e)> Editor_MouseMoved { get; } = new ReactiveCommand<(object sender, EventArgs e)>();
+        public ReactiveCommand<(object sender, EventArgs e)> Editor_MouseLeaved { get; } = new ReactiveCommand<(object sender, EventArgs e)>();
         public ReactiveCommand<(object sender, EventArgs e)> Editor_MouseLeftButtonDown { get; } = new ReactiveCommand<(object sender, EventArgs e)>();
         public ReactiveCommand<(object sender, EventArgs e)> Editor_MouseRightButtonDown { get; } = new ReactiveCommand<(object sender, EventArgs e)>();
 
@@ -187,7 +188,8 @@ namespace SNE.ViewModels
                     return;
                 }
 
-                using (var writer = new StreamWriter(fileName, false, Encoding.UTF8)) { writer.Write(jsonString); }
+                using var writer = new StreamWriter(fileName, false, Encoding.UTF8);
+                writer.Write(jsonString);
             });
 
             this.MenuItemFileExportJSONFile_Clicked.Subscribe(_ =>
@@ -257,8 +259,6 @@ namespace SNE.ViewModels
                         DifficultyLevel = level
                     };
 
-                    Debug.Print($"Note Xpos: {note.XPosition}, Ypos: {note.YPosition}, DL: {note.DifficultyLevel}");
-
                     this.Notes.Add(note);
                     UpdateNotesUI();
                 }
@@ -309,7 +309,7 @@ namespace SNE.ViewModels
                     yPos % this.GridHeight.Value < (this.GridWidth.Value / 2)) ||
                     (xPos % (this.GridWidth.Value / this.LPB.Value) < (this.GridWidth.Value / 2) &&
                     yPos % this.GridHeight.Value > (this.GridWidth.Value / 2))) &&
-                    yPos < this.GridHeight.Value * (this.Lane.Value + 1))
+                    yPos < this.GridHeight.Value * (this.Lane.Value + 1) - (this.GridWidth.Value / 2))
                 {
                     var noteXPos = Math.Round(xPos / (this.GridWidth.Value / this.LPB.Value)) * (this.GridWidth.Value / this.LPB.Value);
                     var noteYPos = Math.Round(yPos / this.GridHeight.Value) * this.GridHeight.Value;
@@ -317,6 +317,11 @@ namespace SNE.ViewModels
                     if (noteYPos > 0)
                         UpdateMousePointerUI(noteXPos, noteYPos);
                 }
+            });
+
+            this.Editor_MouseLeaved.Subscribe(_ =>
+            {
+                this.MousePointers.Clear();
             });
 
             this.MenuItemHelpAbout_Clicked.Subscribe(_ =>
@@ -426,10 +431,12 @@ namespace SNE.ViewModels
             {
                 if (i % GridWidth.Value == 0)
                 {
-                    var bpm = new BPMText();
-                    bpm.Text = cnt.ToString();
-                    bpm.XPosition = i + 4;
-                    bpm.YPosition = 1;
+                    var bpm = new BPMText
+                    {
+                        Text = cnt.ToString(),
+                        XPosition = i + 4,
+                        YPosition = 1
+                    };
 
                     this.BPMTexts.Add(bpm);
                     cnt++;

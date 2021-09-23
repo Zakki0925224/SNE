@@ -56,16 +56,17 @@
 * QuickConverter
 
 ## Latest Download
-* [Latest Download (for 64bit windows) - v0.3Alpha](https://github.com/Zakki0925224/SNE/releases/download/v0.3Alpha/SNE.zip)
+* [Latest Download (for 64bit windows) - v0.4Alpha](https://github.com/Zakki0925224/SNE/releases/download/v0.4Alpha/SNE.zip)
 * [リリース一覧](https://github.com/Zakki0925224/SNE/releases)
 
 ## Update Histories
-### v0.3Alpha
-* 難易度切り替えシステムの追加
-* 譜面判別用GUIDの追加
-* ノーツ設置判定をもっと広く
-* Descriptionテキストボックスの追加
-* その他バグ修正
+### v0.4Alpha
+* LPBの追加
+* Offset調整の追加
+* ノーツ表示サイズ調整の追加
+* コントロールの変更
+* ノーツ設置判定処理の変更
+* レーンが見切れる不具合を修正
 
 ## License
 本ソフトウェアおよび使用しているライブラリすべてにMIT Licenseが適用されています。

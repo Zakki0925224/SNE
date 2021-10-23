@@ -48,7 +48,7 @@ namespace SNE.Models.Converters
 
         private static int ConvertYPositionToLaneID(double yPos, double gridHeigt)
         {
-            return (int)(yPos / (gridHeigt * 2));
+            return (int)(yPos / gridHeigt);
         }
     }
 }

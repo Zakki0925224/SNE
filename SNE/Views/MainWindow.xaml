@@ -9,6 +9,12 @@
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Title="{Binding Title.Value}" Height="450" Width="800" MinHeight="450" MinWidth="800" >
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding MenuItemFileNew_Clicked}" Gesture="Ctrl+N"/>
+        <KeyBinding Command="{Binding MenuItemFileOpen_Clicked}" Gesture="Ctrl+O"/>
+        <KeyBinding Command="{Binding MenuItemFileSave_Clicked}" Gesture="Ctrl+S"/>
+        <KeyBinding Command="{Binding MenuItemFileExportJSONFile_Clicked}" Gesture="Ctrl+E"/>
+    </Window.InputBindings>
     <Window.Resources>
         <converters:EventConverter x:Key="EventConverter"/>
         <DrawingBrush x:Key="gridBrush"
@@ -39,13 +45,13 @@
         <ContentControl prism:RegionManager.RegionName="ContentRegion" />
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File(_F)">
-                <MenuItem Header="New(_N)" Command="{Binding MenuItemFileNew_Clicked}"/>
-                <MenuItem Header="Open project(_O)..." IsEnabled="True" Command="{Binding MenuItemFileOpen_Clicked}"/>
-                <MenuItem Header="Save project(_S)..." IsEnabled="{Binding IsInitialized.Value}" Command="{Binding MenuItemFileSave_Clicked}"/>
+                <MenuItem Header="New(_N)" Command="{Binding MenuItemFileNew_Clicked}" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="Open project(_O)..." IsEnabled="True" Command="{Binding MenuItemFileOpen_Clicked}" InputGestureText="Ctrl+O"/>
+                <MenuItem Header="Save project(_S)..." IsEnabled="{Binding IsInitialized.Value}" Command="{Binding MenuItemFileSave_Clicked}" InputGestureText="Ctrl+S"/>
                 <Separator/>
-                <MenuItem Header="Export JSON file..." Command="{Binding MenuItemFileExportJSONFile_Clicked}" IsEnabled="{Binding IsInitialized.Value}"/>
+                <MenuItem Header="Export JSON file..." Command="{Binding MenuItemFileExportJSONFile_Clicked}" IsEnabled="{Binding IsInitialized.Value}" InputGestureText="Ctrl+E"/>
                 <Separator/>
-                <MenuItem Header="Exit(_X)" Command="{Binding MenuItemFileExit_Clicked}"/>
+                <MenuItem Header="Exit(_X)" Command="{Binding MenuItemFileExit_Clicked}" InputGestureText="Alt+F4"/>
             </MenuItem>
             <MenuItem Header="Help(_H)">
                 <MenuItem Header="About(_A)..." Command="{Binding MenuItemHelpAbout_Clicked}"/>

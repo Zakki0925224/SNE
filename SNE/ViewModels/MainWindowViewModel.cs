@@ -165,6 +165,9 @@ namespace SNE.ViewModels
 
             this.MenuItemFileSave_Clicked.Subscribe(_ =>
             {
+                if (!this.IsInitialized.Value)
+                    return;
+
                 var extention = Const.ProjectExtention;
                 var fileName = FileDialog.ShowSaveFileDialog($"{Const.AppName} Project File (*{extention})|*{extention}", "Save project...", true);
 
@@ -203,6 +206,9 @@ namespace SNE.ViewModels
 
             this.MenuItemFileExportJSONFile_Clicked.Subscribe(_ =>
             {
+                if (!this.IsInitialized.Value)
+                    return;
+
                 var jsonString = ConvertToJsonData.ConvertToExportJson(this.TitleString.Value, this.DescString.Value, new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value, this.Offset.Value);
                 var fileName = FileDialog.ShowSaveFileDialog("JSON File (*.json)|*.json", "Save JSON File...", true);
 

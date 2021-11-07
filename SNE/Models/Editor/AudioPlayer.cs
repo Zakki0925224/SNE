@@ -117,7 +117,7 @@ namespace SNE.Models.Editor
 
         public void Back(TimeSpan time)
         {
-            if (this.IsInitialized && this.TotalTimeSeconds - this.CurrentTimeSeconds > time.TotalSeconds)
+            if (this.IsInitialized && this.CurrentTimeSeconds > time.TotalSeconds)
                 this.CurrentTimeSeconds -= time.TotalSeconds;
         }
 

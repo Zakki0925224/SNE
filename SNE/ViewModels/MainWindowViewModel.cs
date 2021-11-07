@@ -31,7 +31,7 @@ namespace SNE.ViewModels
         public AudioPlayer AudioPlayer { get; set; } = new AudioPlayer();
 
         // reactive properties
-        public ReactiveProperty<string> Title { get; set; } = new ReactiveProperty<string>("SimpleNotesEditor");
+        public ReactiveProperty<string> Title { get; set; } = new ReactiveProperty<string>(Const.AppName);
         public ReactiveProperty<double> CurrentTimeSeconds { get; set; }
         public ReactiveProperty<double> TotalTimeSeconds { get; set; }
         public ReactiveProperty<double> Volume { get; set; }
@@ -130,7 +130,7 @@ namespace SNE.ViewModels
             this.MenuItemFileOpen_Clicked.Subscribe(_ =>
             {
                 var extention = Const.ProjectExtention;
-                var fileName = FileDialog.ShowOpenFileDialog($"Simple Notes Editor Project File (*{extention})|*{extention}", "Open project...", true);
+                var fileName = FileDialog.ShowOpenFileDialog($"{Const.AppName} Project File (*{extention})|*{extention}", "Open project...", true);
 
                 if (!File.Exists(fileName))
                     return;
@@ -166,7 +166,7 @@ namespace SNE.ViewModels
             this.MenuItemFileSave_Clicked.Subscribe(_ =>
             {
                 var extention = Const.ProjectExtention;
-                var fileName = FileDialog.ShowSaveFileDialog($"Simple Notes Editor Project File (*{extention})|*{extention}", "Save project...", true);
+                var fileName = FileDialog.ShowSaveFileDialog($"{Const.AppName} Project File (*{extention})|*{extention}", "Save project...", true);
 
                 if (fileName == "")
                     return;
@@ -234,12 +234,12 @@ namespace SNE.ViewModels
 
             this.AudioPlayerBackButton_Clicked.Subscribe(_ =>
             {
-                this.AudioPlayer.Back(new TimeSpan(0, 0, 5));
+                this.AudioPlayer.Back(new TimeSpan(0, 0, Const.BackAndForwardSeconds));
             });
 
             this.AudioPlayerForwardButton_Clicked.Subscribe(_ =>
             {
-                this.AudioPlayer.Forward(new TimeSpan(0, 0, 5));
+                this.AudioPlayer.Forward(new TimeSpan(0, 0, Const.BackAndForwardSeconds));
             });
 
             this.Editor_MouseLeftButtonDown.Subscribe(x =>
@@ -397,7 +397,7 @@ namespace SNE.ViewModels
             if (File.Exists(audioFilePath))
             {
                 this.AudioPlayer.Initialize(audioFilePath);
-                this.Title.Value = $"{audioFilePath} - SimpleNotesEditor";
+                this.Title.Value = $"{audioFilePath} - {Const.AppName}";
                 this.IsEditable.Value = false;
                 this.TitleString.Value = Path.GetFileNameWithoutExtension(audioFilePath);
                 this.Notes.Clear();

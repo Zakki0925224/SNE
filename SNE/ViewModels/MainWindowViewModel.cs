@@ -57,6 +57,7 @@ namespace SNE.ViewModels
         public ReactiveCommand MenuItemFileSave_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand MenuItemFileExportJSONFile_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand MenuItemFileExit_Clicked { get; } = new ReactiveCommand();
+        public ReactiveCommand MenuItemToolPreviewWindow_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand MenuItemHelpAbout_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerPlayPauseButton_Clicked { get; } = new ReactiveCommand();
         public ReactiveCommand AudioPlayerBackButton_Clicked { get; } = new ReactiveCommand();
@@ -345,6 +346,15 @@ namespace SNE.ViewModels
             this.Editor_MouseLeaved.Subscribe(_ =>
             {
                 this.MousePointers.Clear();
+            });
+
+            this.MenuItemToolPreviewWindow_Clicked.Subscribe(_ =>
+            {
+                if (!this.IsInitialized.Value)
+                    return;
+
+                var pw = new PreviewWindow(this.AudioPlayer, ConvertToJsonData.ConvertToExportJson(this.TitleString.Value, this.DescString.Value, new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value, this.Offset.Value));
+                pw.ShowDialog();
             });
 
             this.MenuItemHelpAbout_Clicked.Subscribe(_ =>

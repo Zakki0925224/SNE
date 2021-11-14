@@ -8,7 +8,7 @@ namespace SNE.Models.Converters
 {
     public static class ConvertToJsonData
     {
-        public static string ConvertToExportJson(string title,
+        public static JsonDataModel GenerateJsonDataModel(string title,
                                                  string description,
                                                  List<Note> notes,
                                                  double gridHeight,
@@ -33,7 +33,17 @@ namespace SNE.Models.Converters
                 data.NotesData.Add(noteData);
             }
 
-            return JsonConvert.SerializeObject(data);
+            return data;
+        }
+
+        public static string Convert(string title,
+                                                 string description,
+                                                 List<Note> notes,
+                                                 double gridHeight,
+                                                 double BPM,
+                                                 double offset)
+        {
+            return JsonConvert.SerializeObject(GenerateJsonDataModel(title, description, notes, gridHeight, BPM, offset));
         }
 
         public static string ConvertToProjectDataJson(ExportDataModel model)

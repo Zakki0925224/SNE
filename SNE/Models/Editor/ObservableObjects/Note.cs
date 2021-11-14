@@ -26,7 +26,7 @@ namespace SNE.Models.Editor.ObservableModels
             }
         }
 
-        public Brush NoteColor { get; set; }
+        public Brush NoteColor { get; private set; }
         public int Size { get; set; }
     }
 }

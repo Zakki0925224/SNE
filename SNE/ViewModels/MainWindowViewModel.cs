@@ -210,7 +210,7 @@ namespace SNE.ViewModels
                 if (!this.IsInitialized.Value)
                     return;
 
-                var jsonString = ConvertToJsonData.ConvertToExportJson(this.TitleString.Value, this.DescString.Value, new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value, this.Offset.Value);
+                var jsonString = ConvertToJsonData.Convert(this.TitleString.Value, this.DescString.Value, new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value, this.Offset.Value);
                 var fileName = FileDialog.ShowSaveFileDialog("JSON File (*.json)|*.json", "Save JSON File...", true);
 
                 if (fileName != "")
@@ -353,7 +353,7 @@ namespace SNE.ViewModels
                 if (!this.IsInitialized.Value)
                     return;
 
-                var pw = new PreviewWindow(this.AudioPlayer, ConvertToJsonData.ConvertToExportJson(this.TitleString.Value, this.DescString.Value, new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value, this.Offset.Value));
+                var pw = new PreviewWindow(this.AudioPlayer, ConvertToJsonData.GenerateJsonDataModel(this.TitleString.Value, this.DescString.Value, new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value, this.Offset.Value));
                 pw.ShowDialog();
             });
 

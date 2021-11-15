@@ -14,7 +14,7 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Canvas Grid.Row="0">
-            <ItemsControl ItemsSource="{Binding Notes}">
+            <ItemsControl ItemsSource="{Binding ViewNotes}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas/>
@@ -44,7 +44,7 @@
                 <ColumnDefinition Width="50"/>
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="Play/Pause" Margin="3,3,3,3"/>
+            <Button Grid.Column="0" Content="Play/Pause" Margin="3,3,3,3" Command="{Binding AudioPlayerPlayPauseButton_Clicked}" IsEnabled="{Binding IsInitialized.Value}"/>
             <Slider Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Value="{Binding CurrentTimeSeconds.Value, Mode=TwoWay}" Maximum="{Binding TotalTimeSeconds.Value}" TickFrequency="0.01"/>
             <Label Grid.Column="2" Content="Volume"/>
             <Slider Grid.Column="3" VerticalAlignment="Center" Maximum="1" LargeChange="0.1" TickFrequency="0.1" Value="{Binding Volume.Value, Mode=TwoWay}"/>

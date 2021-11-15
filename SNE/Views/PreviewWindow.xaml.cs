@@ -1,6 +1,7 @@
 ﻿using SNE.Models.Editor;
-using SNE.Models.Editor.DataModels;
+using SNE.Models.Editor.ObservableModels;
 using SNE.ViewModels;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace SNE.Views
@@ -10,11 +11,11 @@ namespace SNE.Views
     /// </summary>
     public partial class PreviewWindow : Window
     {
-        public PreviewWindow(AudioPlayer audioPlayer, JsonDataModel jsonDataModel)
+        public PreviewWindow(AudioPlayer audioPlayer, ObservableCollection<Note> filteredNotes)
         {
             InitializeComponent();
+            ((PreviewWindowViewModel)this.DataContext).SharedEditingNotes = filteredNotes;
             ((PreviewWindowViewModel)this.DataContext).AudioPlayer.Value = audioPlayer;
-            ((PreviewWindowViewModel)this.DataContext).DataModel.Value = jsonDataModel;
         }
     }
 }

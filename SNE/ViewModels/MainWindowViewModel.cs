@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,6 +49,7 @@ namespace SNE.ViewModels
         public ReactiveProperty<bool> ShowHardNotes { get; set; } = new ReactiveProperty<bool>(false);
         public ReactiveProperty<bool> IsEditable { get; set; } = new ReactiveProperty<bool>(true);
         public ReactiveProperty<bool> IsInitialized { get; set; } = new ReactiveProperty<bool>(false);
+        public ReactiveProperty<bool> OnNotesChangedFlag { get; set; } = new ReactiveProperty<bool>(false);
         public ReactiveProperty<string> TitleString { get; set; } = new ReactiveProperty<string>("");
         public ReactiveProperty<string> DescString { get; set; } = new ReactiveProperty<string>("");
         public ReactiveCommand MenuItemFileNew_Clicked { get; } = new ReactiveCommand();
@@ -219,7 +219,7 @@ namespace SNE.ViewModels
 
             this.MenuItemFileExit_Clicked.Subscribe(_ =>
             {
-                meInstance.Close();
+                Application.Current.Shutdown();
             });
 
             this.AudioPlayerPlayPauseButton_Clicked.Subscribe(_ =>
@@ -353,8 +353,8 @@ namespace SNE.ViewModels
                 if (!this.IsInitialized.Value)
                     return;
 
-                var pw = new PreviewWindow(this.AudioPlayer, ConvertToJsonData.GenerateJsonDataModel(this.TitleString.Value, this.DescString.Value, new List<Note>(this.Notes), this.GridHeight.Value, this.BPM.Value, this.Offset.Value));
-                pw.ShowDialog();
+                var pw = new PreviewWindow(this.AudioPlayer, this.FilteredNotes);
+                pw.Show();
             });
 
             this.MenuItemHelpAbout_Clicked.Subscribe(_ =>
@@ -406,6 +406,13 @@ namespace SNE.ViewModels
             {
                 UpdateNotesUI();
             });
+
+            meInstance.Closed += MeInstance_Closed;
+        }
+
+        private void MeInstance_Closed(object sender, EventArgs e)
+        {
+            Application.Current.Shutdown();
         }
 
         private void InitializeEditor(string audioFilePath)

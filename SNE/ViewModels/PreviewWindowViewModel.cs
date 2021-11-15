@@ -2,35 +2,42 @@
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using SNE.Models.Editor;
-using SNE.Models.Editor.DataModels;
 using SNE.Models.Editor.ObservableModels;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace SNE.ViewModels
 {
     public class PreviewWindowViewModel : BindableBase
     {
+        private Timer Timer { get; set; }
+
         public ReactiveProperty<string> Title { get; set; } = new ReactiveProperty<string>($"Preview - {Const.AppName}");
         public ReactiveProperty<AudioPlayer> AudioPlayer { get; set; } = new ReactiveProperty<AudioPlayer>();
-        public ReactiveProperty<JsonDataModel> DataModel { get; set; } = new ReactiveProperty<JsonDataModel>();
 
         public ReactiveProperty<double> CurrentTimeSeconds { get; set; }
         public ReactiveProperty<double> TotalTimeSeconds { get; set; }
         public ReactiveProperty<double> Volume { get; set; }
-        public ReactiveProperty<bool> ShowEasyNotes { get; set; } = new ReactiveProperty<bool>(true);
-        public ReactiveProperty<bool> ShowNormalNotes { get; set; } = new ReactiveProperty<bool>(false);
-        public ReactiveProperty<bool> ShowHardNotes { get; set; } = new ReactiveProperty<bool>(false);
+        public ReactiveProperty<bool> IsInitialized { get; set; } = new ReactiveProperty<bool>(false);
 
-        private ObservableCollection<Note> _notes = new ObservableCollection<Note>();
-        public ObservableCollection<Note> Notes
+        private ObservableCollection<Note> _sharedEditingNotes = null;
+        public ObservableCollection<Note> SharedEditingNotes
         {
-            get => _notes;
-            set => SetProperty(ref _notes, value);
+            get => _sharedEditingNotes;
+            set => SetProperty(ref _sharedEditingNotes, value);
         }
 
-        public List<Note> TargetLaneNotes = new List<Note>();
+        private ObservableCollection<Note> _viewNotes = new ObservableCollection<Note>();
+        public ObservableCollection<Note> ViewNotes
+        {
+            get => _viewNotes;
+            set => SetProperty(ref _viewNotes, value);
+        }
+
+        public ReactiveCommand AudioPlayerPlayPauseButton_Clicked { get; } = new ReactiveCommand();
 
         public PreviewWindowViewModel()
         {
@@ -47,60 +54,65 @@ namespace SNE.ViewModels
                 UpdatePreviewUI();
             });
 
-            this.DataModel.Subscribe(_ =>
+            this.AudioPlayerPlayPauseButton_Clicked.Subscribe(_ =>
             {
-                UpdatePreviewUI();
+                if (this.AudioPlayer.Value.IsPlaying)
+                {
+                    if (this.IsInitialized.Value)
+                    {
+                        this.AudioPlayer.Value.Pause();
+                        this.Timer.Stop();
+                    }
+                }
+                else
+                {
+                    if (this.IsInitialized.Value)
+                    {
+                        this.AudioPlayer.Value.Play();
+                        this.Timer.Start();
+                    }
+                }
             });
+        }
 
-            this.ShowEasyNotes.Subscribe(_ =>
-            {
-                UpdatePreviewUI();
-            });
-
-            this.ShowNormalNotes.Subscribe(_ =>
-            {
-                UpdatePreviewUI();
-            });
-
-            this.ShowHardNotes.Subscribe(_ =>
-            {
-                UpdatePreviewUI();
-            });
+        private void SharedEditingNotes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Debug.Print("UPDATE");
+            UpdatePreviewUI();
         }
 
         private void UpdatePreviewUI()
         {
             if (this.AudioPlayer.Value == null ||
-                this.DataModel.Value == null)
+                this.SharedEditingNotes == null)
                 return;
 
-            this.Notes.Clear();
-            this.TargetLaneNotes.Clear();
+            // TODO: generate preview ui
 
-            // get max lane id
-            var maxLaneID = 1;
-            foreach (var note in this.DataModel.Value.NotesData)
+            if (!this.IsInitialized.Value)
             {
-                var laneID = note.LaneID;
-
-                if (maxLaneID < laneID)
-                    maxLaneID = laneID;
+                TimerInitialize();
+                _sharedEditingNotes.CollectionChanged += SharedEditingNotes_CollectionChanged;
             }
 
-            // gen target lane notes
-            for (int i = 1; i <= maxLaneID; i++)
-                this.TargetLaneNotes.Add(new Note() { XPosition = 10 * i, YPosition = 0 });
+            this.IsInitialized.Value = true;
+        }
 
-            // gen notes
-            foreach (var note in this.DataModel.Value.NotesData)
+        private void TimerInitialize()
+        {
+            this.Timer = new Timer(50);
+            this.Timer.AutoReset = true;
+            this.Timer.Elapsed += Timer_Elapsed;
+
+        }
+
+        private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            await Task.Run(() =>
             {
-                this.Notes.Add(new Note()
-                {
-                    XPosition = this.TargetLaneNotes[note.LaneID - 1].XPosition,
-                    YPosition = 0,
-                    DifficultyLevel = note.DifficultyLevel
-                });
-            }
+                if (this.AudioPlayer.Value.IsPlaying)
+                    this.CurrentTimeSeconds.Value = this.AudioPlayer.Value.CurrentTimeSeconds;
+            });
         }
     }
 }

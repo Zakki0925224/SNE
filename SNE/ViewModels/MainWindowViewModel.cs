@@ -49,7 +49,6 @@ namespace SNE.ViewModels
         public ReactiveProperty<bool> ShowHardNotes { get; set; } = new ReactiveProperty<bool>(false);
         public ReactiveProperty<bool> IsEditable { get; set; } = new ReactiveProperty<bool>(true);
         public ReactiveProperty<bool> IsInitialized { get; set; } = new ReactiveProperty<bool>(false);
-        public ReactiveProperty<bool> OnNotesChangedFlag { get; set; } = new ReactiveProperty<bool>(false);
         public ReactiveProperty<string> TitleString { get; set; } = new ReactiveProperty<string>("");
         public ReactiveProperty<string> DescString { get; set; } = new ReactiveProperty<string>("");
         public ReactiveCommand MenuItemFileNew_Clicked { get; } = new ReactiveCommand();

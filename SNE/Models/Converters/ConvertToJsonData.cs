@@ -51,7 +51,7 @@ namespace SNE.Models.Converters
             return JsonConvert.SerializeObject(model);
         }
 
-        private static double ConvertXPositionToSecond(double xPos, double BPM)
+        public static double ConvertXPositionToSecond(double xPos, double BPM)
         {
             return (6 / BPM) * xPos;
         }

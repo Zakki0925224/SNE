@@ -16,12 +16,17 @@ namespace SNE.ViewModels
         private Timer Timer { get; set; }
 
         public ReactiveProperty<string> Title { get; set; } = new ReactiveProperty<string>($"Preview - {Const.AppName}");
+        public ReactiveProperty<double> WindowWidth { get; set; } = new ReactiveProperty<double>(640);
         public ReactiveProperty<AudioPlayer> AudioPlayer { get; set; } = new ReactiveProperty<AudioPlayer>();
 
         public ReactiveProperty<double> CurrentTimeSeconds { get; set; }
         public ReactiveProperty<double> TotalTimeSeconds { get; set; }
         public ReactiveProperty<double> Volume { get; set; }
         public ReactiveProperty<bool> IsInitialized { get; set; } = new ReactiveProperty<bool>(false);
+        public ReactiveProperty<double> CheckLineYCoordinate { get; set; } = new ReactiveProperty<double>(400);
+        public ReactiveProperty<double> CheckLineWidth { get; set; } = new ReactiveProperty<double>(600);
+        public ReactiveProperty<int> BPM { get; set; } = new ReactiveProperty<int>();
+        public ReactiveProperty<int> Offset { get; set; } = new ReactiveProperty<int>();
 
         private ObservableCollection<Note> _sharedEditingNotes = null;
         public ObservableCollection<Note> SharedEditingNotes
@@ -49,11 +54,6 @@ namespace SNE.ViewModels
 
         private void SubscribeCommands()
         {
-            this.AudioPlayer.Subscribe(_ =>
-            {
-                UpdatePreviewUI();
-            });
-
             this.AudioPlayerPlayPauseButton_Clicked.Subscribe(_ =>
             {
                 if (this.AudioPlayer.Value.IsPlaying)
@@ -75,26 +75,21 @@ namespace SNE.ViewModels
             });
         }
 
-        private void SharedEditingNotes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            Debug.Print("UPDATE");
-            UpdatePreviewUI();
-        }
-
-        private void UpdatePreviewUI()
+        public void InitializePreviewUI()
         {
             if (this.AudioPlayer.Value == null ||
                 this.SharedEditingNotes == null)
                 return;
 
+            if (this.IsInitialized.Value)
+                return;
+
             // TODO: generate preview ui
 
-            if (!this.IsInitialized.Value)
-            {
-                TimerInitialize();
-                _sharedEditingNotes.CollectionChanged += SharedEditingNotes_CollectionChanged;
-            }
+            // for debug
+            Debug.Print($"AP:{this.AudioPlayer.Value}, BPM:{this.BPM.Value}, Offset:{this.Offset.Value}");
 
+            TimerInitialize();
             this.IsInitialized.Value = true;
         }
 

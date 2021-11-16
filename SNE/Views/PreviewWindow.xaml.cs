@@ -11,11 +11,15 @@ namespace SNE.Views
     /// </summary>
     public partial class PreviewWindow : Window
     {
-        public PreviewWindow(AudioPlayer audioPlayer, ObservableCollection<Note> filteredNotes)
+        public PreviewWindow(AudioPlayer audioPlayer, ObservableCollection<Note> filteredNotes, int bpm, int offset)
         {
             InitializeComponent();
-            ((PreviewWindowViewModel)this.DataContext).SharedEditingNotes = filteredNotes;
-            ((PreviewWindowViewModel)this.DataContext).AudioPlayer.Value = audioPlayer;
+            var vm = (PreviewWindowViewModel)this.DataContext;
+            vm.SharedEditingNotes = filteredNotes;
+            vm.AudioPlayer.Value = audioPlayer;
+            vm.BPM.Value = bpm;
+            vm.Offset.Value = offset;
+            vm.InitializePreviewUI();
         }
     }
 }

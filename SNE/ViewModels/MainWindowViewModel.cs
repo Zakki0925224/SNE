@@ -351,8 +351,8 @@ namespace SNE.ViewModels
                 if (!this.IsInitialized.Value)
                     return;
 
-                var pw = new PreviewWindow(this.AudioPlayer, this.FilteredNotes);
-                pw.Show();
+                var pw = new PreviewWindow(this.AudioPlayer, this.FilteredNotes, this.BPM.Value, this.Offset.Value);
+                pw.ShowDialog();
             });
 
             this.MenuItemHelpAbout_Clicked.Subscribe(_ =>

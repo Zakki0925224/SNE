@@ -5,7 +5,7 @@
         xmlns:qc="http://QuickConverter.CodePlex.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Height="480"
-        Width="640"
+        Width="{Binding WindowWidth.Value}"
         ResizeMode="NoResize"
         Title="{Binding Title.Value}">
     <Grid>
@@ -24,7 +24,7 @@
                     <DataTemplate>
                         <Rectangle Width="{Binding Size}" Height="{Binding Size}" Fill="{Binding NoteColor}">
                             <Rectangle.RenderTransform>
-                                <TranslateTransform X="{qc:Binding  '-($P / 2)', ConvertBack='$value * -2', P={Binding Size}}" Y="{qc:Binding  '-($P / 2)', ConvertBack='$value * -2', P={Binding Size}}"/>
+                                <TranslateTransform X="10" Y="10"/>
                             </Rectangle.RenderTransform>
                         </Rectangle>
                     </DataTemplate>
@@ -36,6 +36,7 @@
                     </Style>
                 </ItemsControl.ItemContainerStyle>
             </ItemsControl>
+            <Line X1="0" X2="{Binding CheckLineWidth.Value}" Y1="{Binding CheckLineYCoordinate.Value}" Y2="{Binding CheckLineYCoordinate.Value}" Stroke="Red"/>
         </Canvas>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>

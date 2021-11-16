@@ -422,7 +422,7 @@ namespace SNE.ViewModels
                 this.TitleString.Value = Path.GetFileNameWithoutExtension(audioFilePath);
                 this.Notes.Clear();
                 RaisePropertyChanged();
-                TimerInitialize();
+                InitializeTimer();
                 this.IsInitialized.Value = true;
             }
             else
@@ -531,7 +531,7 @@ namespace SNE.ViewModels
             this.MousePointers.Add(pointer);
         }
 
-        private void TimerInitialize()
+        private void InitializeTimer()
         {
             this.Timer = new Timer(50);
             this.Timer.AutoReset = true;

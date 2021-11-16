@@ -89,11 +89,11 @@ namespace SNE.ViewModels
             // for debug
             Debug.Print($"AP:{this.AudioPlayer.Value}, BPM:{this.BPM.Value}, Offset:{this.Offset.Value}");
 
-            TimerInitialize();
+            InitializeTimer();
             this.IsInitialized.Value = true;
         }
 
-        private void TimerInitialize()
+        private void InitializeTimer()
         {
             this.Timer = new Timer(50);
             this.Timer.AutoReset = true;

@@ -47,7 +47,6 @@ namespace SNE.ViewModels
         public ReactiveProperty<bool> ShowEasyNotes { get; set; } = new ReactiveProperty<bool>(true);
         public ReactiveProperty<bool> ShowNormalNotes { get; set; } = new ReactiveProperty<bool>(false);
         public ReactiveProperty<bool> ShowHardNotes { get; set; } = new ReactiveProperty<bool>(false);
-        public ReactiveProperty<bool> IsEditable { get; set; } = new ReactiveProperty<bool>(true);
         public ReactiveProperty<bool> IsInitialized { get; set; } = new ReactiveProperty<bool>(false);
         public ReactiveProperty<string> TitleString { get; set; } = new ReactiveProperty<string>("");
         public ReactiveProperty<string> DescString { get; set; } = new ReactiveProperty<string>("");
@@ -420,7 +419,6 @@ namespace SNE.ViewModels
             {
                 this.AudioPlayer.Initialize(audioFilePath);
                 this.Title.Value = $"{audioFilePath} - {Const.AppName}";
-                this.IsEditable.Value = false;
                 this.TitleString.Value = Path.GetFileNameWithoutExtension(audioFilePath);
                 this.Notes.Clear();
                 RaisePropertyChanged();

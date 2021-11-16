@@ -92,7 +92,7 @@
                     <TextBlock Grid.Column="2" Text="LPB" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <xctk:IntegerUpDown Grid.Column="3" Value="{Binding LPB.Value}" Minimum="1" Maximum="8" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
                     <TextBlock Grid.Column="4" Text="Lane" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <xctk:IntegerUpDown Grid.Column="5" Value="{Binding Lane.Value}" Minimum="1" Maximum="50" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft" IsEnabled="{Binding IsEditable.Value}"/>
+                    <xctk:IntegerUpDown Grid.Column="5" Value="{Binding Lane.Value}" Minimum="1" Maximum="50" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft" IsEnabled="{qc:Binding '!$P', ConvertBack='$value', P={Binding IsInitialized.Value}}"/>
                     <TextBlock Grid.Column="6" Text="Offset" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <xctk:IntegerUpDown Grid.Column="7" Value="{Binding Offset.Value}" Minimum="0" Maximum="100" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" FlowDirection="RightToLeft"/>
                     <StackPanel Grid.Column="8" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">

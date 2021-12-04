@@ -56,7 +56,7 @@
 * QuickConverter
 
 ## Latest Download
-* [Latest Download (for 64bit windows) - v0.4Alpha](https://github.com/Zakki0925224/SNE/releases/download/v0.4Alpha/SNE.zip)
+* [Latest Download (for 64bit windows) - v0.5Alpha](https://github.com/Zakki0925224/SNE/releases/download/v0.5Alpha/SNE.zip)
 * [リリース一覧](https://github.com/Zakki0925224/SNE/releases)
 
 ## Update Histories

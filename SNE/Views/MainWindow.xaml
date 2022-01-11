@@ -239,7 +239,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Title" Grid.Column="0"/>
-                        <TextBox Grid.Column="1" Height="20" Text="{Binding TitleString.Value}"/>
+                        <TextBox Grid.Column="1" Height="20" Text="{Binding TitleString.Value, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
@@ -247,7 +247,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Label Content="Description" Grid.Column="0"/>
-                        <TextBox Grid.Column="1" Height="20" Text="{Binding DescString.Value}"/>
+                        <TextBox Grid.Column="1" Height="20" Text="{Binding DescString.Value, UpdateSourceTrigger=PropertyChanged}"/>
                     </Grid>
                 </Grid>
                 <Grid Grid.Column="1">

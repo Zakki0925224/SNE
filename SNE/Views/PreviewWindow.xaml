@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"             
         xmlns:qc="http://QuickConverter.CodePlex.com/"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Height="480"
         Width="{Binding WindowWidth.Value}"
@@ -12,8 +13,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <Canvas Grid.Row="0">
+        <Canvas Grid.Row="0" Background="#FF303030">
             <ItemsControl ItemsSource="{Binding ViewNotes}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -22,7 +24,7 @@
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Rectangle Width="{Binding Size}" Height="{Binding Size}" Fill="{Binding NoteColor}">
+                        <Rectangle Width="{Binding Note.Size}" Height="{Binding Note.Size}" Fill="{Binding Note.NoteColor}">
                             <Rectangle.RenderTransform>
                                 <TranslateTransform X="10" Y="10"/>
                             </Rectangle.RenderTransform>
@@ -31,14 +33,28 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemContainerStyle>
                     <Style TargetType="{x:Type ContentPresenter}">
-                        <Setter Property="Canvas.Top" Value="{Binding YPosition}"/>
-                        <Setter Property="Canvas.Left" Value="{Binding XPosition}"/>
+                        <Setter Property="Canvas.Top" Value="{Binding Note.YPosition}"/>
+                        <Setter Property="Canvas.Left" Value="{Binding Note.XPosition}"/>
                     </Style>
                 </ItemsControl.ItemContainerStyle>
             </ItemsControl>
-            <Line X1="0" X2="{Binding CheckLineWidth.Value}" Y1="{Binding CheckLineYCoordinate.Value}" Y2="{Binding CheckLineYCoordinate.Value}" Stroke="Red"/>
+            <Line X1="0" X2="{Binding CheckLineWidth.Value}" Y1="{Binding CheckLineYPosition.Value}" Y2="{Binding CheckLineYPosition.Value}" Stroke="Red"/>
         </Canvas>
         <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <RadioButton Grid.Column="0" Content="Easy" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowEasyNotes.Value}"/>
+            <RadioButton Grid.Column="1" Content="Normal" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowNormalNotes.Value}"/>
+            <RadioButton Grid.Column="2" Content="Hard" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding ShowHardNotes.Value}"/>
+            <TextBlock Grid.Column="3" Text="SlideSpeed:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <xctk:IntegerUpDown Grid.Column="4" Value="{Binding NotesSlideSpeed.Value}" Maximum="20" Minimum="1"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Grid>
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="*"/>

@@ -10,6 +10,7 @@ using SNE.Models.Shell;
 using SNE.Models.Utils;
 using SNE.Views;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -351,7 +352,9 @@ namespace SNE.ViewModels
                 if (!this.IsInitialized.Value)
                     return;
 
-                var pw = new PreviewWindow(this.AudioPlayer, this.FilteredNotes, this.BPM.Value, this.Offset.Value);
+                var model = ConvertToJsonData.GenerateJsonDataModel("", "", this.Notes.ToList(), this.GridHeight.Value, this.BPM.Value, this.Offset.Value);
+
+                var pw = new PreviewWindow(this.AudioPlayer, model.NotesData, this.BPM.Value, this.Offset.Value, this.GridHeight.Value);
                 pw.ShowDialog();
             });
 

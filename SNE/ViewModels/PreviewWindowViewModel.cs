@@ -4,10 +4,12 @@ using Reactive.Bindings.Extensions;
 using SNE.Models.Editor;
 using SNE.Models.Editor.ObservableModels;
 using System;
+using System.Linq;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Timers;
+using SNE.Models.Editor.DataModels;
 
 namespace SNE.ViewModels
 {
@@ -23,20 +25,26 @@ namespace SNE.ViewModels
         public ReactiveProperty<double> TotalTimeSeconds { get; set; }
         public ReactiveProperty<double> Volume { get; set; }
         public ReactiveProperty<bool> IsInitialized { get; set; } = new ReactiveProperty<bool>(false);
-        public ReactiveProperty<double> CheckLineYCoordinate { get; set; } = new ReactiveProperty<double>(400);
-        public ReactiveProperty<double> CheckLineWidth { get; set; } = new ReactiveProperty<double>(600);
+        public ReactiveProperty<double> CheckLineYPosition { get; set; } = new ReactiveProperty<double>(350);
+        public ReactiveProperty<double> CheckLineWidth { get; set; } = new ReactiveProperty<double>(640);
+        public ReactiveProperty<double> LanePositionDistance { get; set; } = new ReactiveProperty<double>(10);
+        public ReactiveProperty<int> NotesSlideSpeed { get; set; } = new ReactiveProperty<int>(10);
+        public ReactiveProperty<int> NotesSize { get; set; } = new ReactiveProperty<int>(50);
         public ReactiveProperty<int> BPM { get; set; } = new ReactiveProperty<int>();
         public ReactiveProperty<int> Offset { get; set; } = new ReactiveProperty<int>();
+        public ReactiveProperty<bool> ShowEasyNotes { get; set; } = new ReactiveProperty<bool>(true);
+        public ReactiveProperty<bool> ShowNormalNotes { get; set; } = new ReactiveProperty<bool>(false);
+        public ReactiveProperty<bool> ShowHardNotes { get; set; } = new ReactiveProperty<bool>(false);
 
-        private ObservableCollection<Note> _sharedEditingNotes = null;
-        public ObservableCollection<Note> SharedEditingNotes
+        private ObservableCollection<NoteDataModel> _sharedEditingNotes = null;
+        public ObservableCollection<NoteDataModel> SharedEditingNotes
         {
             get => _sharedEditingNotes;
             set => SetProperty(ref _sharedEditingNotes, value);
         }
 
-        private ObservableCollection<Note> _viewNotes = new ObservableCollection<Note>();
-        public ObservableCollection<Note> ViewNotes
+        private ObservableCollection<ViewNote> _viewNotes = new ObservableCollection<ViewNote>();
+        public ObservableCollection<ViewNote> ViewNotes
         {
             get => _viewNotes;
             set => SetProperty(ref _viewNotes, value);
@@ -49,6 +57,7 @@ namespace SNE.ViewModels
             this.CurrentTimeSeconds = this.AudioPlayer.ToReactivePropertyAsSynchronized(x => x.Value.CurrentTimeSeconds);
             this.TotalTimeSeconds = this.AudioPlayer.ToReactivePropertyAsSynchronized(x => x.Value.TotalTimeSeconds);
             this.Volume = this.AudioPlayer.ToReactivePropertyAsSynchronized(x => x.Value.Volume);
+            this.ViewNotes = new ObservableCollection<ViewNote>();
             SubscribeCommands();
         }
 
@@ -73,6 +82,12 @@ namespace SNE.ViewModels
                     }
                 }
             });
+
+            this.CurrentTimeSeconds.Subscribe(_ => UpdateNotesPosition());
+            this.ShowEasyNotes.Subscribe(_ => UpdateNotesUI());
+            this.ShowNormalNotes.Subscribe(_ => UpdateNotesUI());
+            this.ShowHardNotes.Subscribe(_ => UpdateNotesUI());
+            this.NotesSlideSpeed.Subscribe(_ => UpdateNotesUI());
         }
 
         public void InitializePreviewUI()
@@ -84,7 +99,7 @@ namespace SNE.ViewModels
             if (this.IsInitialized.Value)
                 return;
 
-            // TODO: generate preview ui
+            UpdateNotesUI();
 
             // for debug
             Debug.Print($"AP:{this.AudioPlayer.Value}, BPM:{this.BPM.Value}, Offset:{this.Offset.Value}");
@@ -93,12 +108,41 @@ namespace SNE.ViewModels
             this.IsInitialized.Value = true;
         }
 
+        private void UpdateNotesUI()
+        {
+            if (this.SharedEditingNotes == null)
+                return;
+
+            this.ViewNotes.Clear();
+
+            if (this.ShowEasyNotes.Value)
+                this.SharedEditingNotes.Where(x => x.DifficultyLevel == 0).ToList().ForEach(x => this.ViewNotes.Add(new ViewNote(new Note() {Size = this.NotesSize.Value, DifficultyLevel = 0}, x.LaneID, x.Time)));
+
+            else if (this.ShowNormalNotes.Value)
+                this.SharedEditingNotes.Where(x => x.DifficultyLevel == 1).ToList().ForEach(x => this.ViewNotes.Add(new ViewNote(new Note() { Size = this.NotesSize.Value, DifficultyLevel = 1 }, x.LaneID, x.Time)));
+
+            else
+                this.SharedEditingNotes.Where(x => x.DifficultyLevel == 2).ToList().ForEach(x => this.ViewNotes.Add(new ViewNote(new Note() { Size = this.NotesSize.Value, DifficultyLevel = 2 }, x.LaneID, x.Time)));
+
+            UpdateNotesPosition();
+        }
+
+        private void UpdateNotesPosition()
+        {
+            foreach(var note in this.ViewNotes)
+            {
+                // TODO: Not reflected in view
+                //note.Note.XPosition = note.LaneID * this.LanePositionDistance.Value;
+                note.Note.XPosition = 100;
+                note.Note.YPosition = this.CurrentTimeSeconds.Value / note.Time * this.CheckLineYPosition.Value;
+            }
+        }
+
         private void InitializeTimer()
         {
             this.Timer = new Timer(50);
             this.Timer.AutoReset = true;
             this.Timer.Elapsed += Timer_Elapsed;
-
         }
 
         private async void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -108,6 +152,20 @@ namespace SNE.ViewModels
                 if (this.AudioPlayer.Value.IsPlaying)
                     this.CurrentTimeSeconds.Value = this.AudioPlayer.Value.CurrentTimeSeconds;
             });
+        }
+    }
+
+    public class ViewNote
+    {
+        public Note Note { get; set; }
+        public int LaneID { get; set; }
+        public double Time { get; set; }
+
+        public ViewNote(Note note, int laneID, double time)
+        {
+            this.Note = note;
+            this.LaneID = laneID;
+            this.Time = time;
         }
     }
 }

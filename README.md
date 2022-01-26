@@ -56,14 +56,36 @@
 * QuickConverter
 
 ## Latest Download
-* [Latest Download (for 64bit windows) - v0.5Alpha](https://github.com/Zakki0925224/SNE/releases/download/v0.5Alpha/SNE.zip)
+* [Latest Download (for 64bit windows) - v0.6Alpha](https://github.com/Zakki0925224/SNE/releases/download/v0.6Alpha/SNE.zip)
 * [リリース一覧](https://github.com/Zakki0925224/SNE/releases)
 
 ## Update Histories
+### v0.6Alpha
+* テキストボックスの内容が譜面データ・プロジェクトデータに反映されてないバグを修正
+* ボタンアイコンの追加
 ### v0.5Alpha
 * レーンIDの数値が適正でなくなるバグを修正
 * 再生終了5秒前にBackボタンとForwardボタンが効かなくなるバグを修正
 * メニューアイテムに対するショートカットキー機能の追加
-
+### v0.4Alpha
+* LPBの追加
+* Offset調整の追加
+* ノーツ表示サイズ調整の追加
+* コントロールの変更
+* ノーツ設置判定処理の変更
+* レーンが見切れる不具合を修正
+### v0.3Alpha
+* 難易度切り替えシステムの追加
+* 譜面判別用GUIDの追加
+* ノーツ設置判定をもっと広く
+* Descriptionテキストボックスの追加
+* その他バグ修正
+### v0.2Alpha
+* 再生位置を変更するテキストボックスを追加
+* レーン番号とBPM打数表示の追加
+* 編集中プロジェクトの途中保存・復元機能の追加
+* ノーツ設置・削除位置のマウス判定をより広く修正
+* ノーツサイズ・カラーを変更
+* その他バグ修正
 ## License
 本ソフトウェアおよび使用しているライブラリすべてにMIT Licenseが適用されています。

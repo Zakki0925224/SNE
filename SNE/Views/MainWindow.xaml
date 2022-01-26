@@ -263,9 +263,27 @@
                             <ColumnDefinition Width="50"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="1" Content="Back" Command="{Binding AudioPlayerBackButton_Clicked}"/>
-                        <Button Grid.Column="2" Content="Play/Pause" Command="{Binding AudioPlayerPlayPauseButton_Clicked}"/>
-                        <Button Grid.Column="3" Content="Forward" Command="{Binding AudioPlayerForwardButton_Clicked}"/>
+                        <Button Grid.Column="1" Command="{Binding AudioPlayerBackButton_Clicked}">
+                            <Viewbox Width="28" Height="28">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="Black" Data="M11.5,12L20,18V6M11,18V6L2.5,12L11,18Z" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                        <Button Grid.Column="2" Command="{Binding AudioPlayerPlayPauseButton_Clicked}">
+                            <Viewbox Width="28" Height="28">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="Black" Data="M3,5V19L11,12M13,19H16V5H13M18,5V19H21V5" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
+                        <Button Grid.Column="3" Command="{Binding AudioPlayerForwardButton_Clicked}">
+                            <Viewbox Width="28" Height="28">
+                                <Canvas Width="24" Height="24">
+                                    <Path Fill="Black" Data="M13,6V18L21.5,12M4,18L12.5,12L4,6V18Z" />
+                                </Canvas>
+                            </Viewbox>
+                        </Button>
                     </Grid>
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>

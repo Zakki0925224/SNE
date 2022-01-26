@@ -54,9 +54,11 @@
                 <Separator/>
                 <MenuItem Header="Exit(_X)" Command="{Binding MenuItemFileExit_Clicked}" InputGestureText="Alt+F4"/>
             </MenuItem>
+            <!--
             <MenuItem Header="Tool(_T)">
                 <MenuItem Header="Preview Window(_P)" Command="{Binding MenuItemToolPreviewWindow_Clicked}" IsEnabled="{Binding IsInitialized.Value}" InputGestureText="Ctrl+P"/>
             </MenuItem>
+            -->
             <MenuItem Header="Help(_H)">
                 <MenuItem Header="About(_A)..." Command="{Binding MenuItemHelpAbout_Clicked}"/>
             </MenuItem>

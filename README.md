@@ -12,6 +12,13 @@
 ![](https://user-images.githubusercontent.com/49384910/134484960-0bb23b40-a121-4c0e-8a1d-3a7cecb4f04d.png)
 * 水平方向の拡大率を利用しているため、BPM値を変更すると横幅が縮小・拡大されます
 
+## How to use
+* mp3形式の音楽ファイルを選択
+* 白い十字線にマウスを動かすと黄色いノーツポインタが出現するので、その状態でポインタ外をクリックするとノーツ配置
+* 配置されているノーツにポインタを合わせ、配置時と同様にクリックするとノーツ削除
+* 編集途中の譜面をプロジェクト（.sneproj）として保存・復元が可能（mp3ファイルのパスを変更する場合、プロジェクトファイルを編集する必要があります）
+* json形式での譜面の出力（プロジェクトに使用したmp3ファイル+出力したjsonファイルを使って音ゲーに譜面を実装します）
+
 ## Exported musical score sample
 ```json
 {
@@ -36,7 +43,7 @@
 * Title (string)
 * Description (string)
 * BPM (string)
-* GUID (string) - エディターによって自動的に生成
+* GUID (string) - エディターによって自動的に生成（楽曲の識別などに使用します）
 * NotesData (object[])
     * Time (double) - 秒単位
     * LaneID (int) - 使用するレーン
@@ -56,7 +63,7 @@
 * QuickConverter
 
 ## Latest Download
-* [Latest Download (for 64bit windows) - v0.6Alpha](https://github.com/Zakki0925224/SNE/releases/download/v0.6Alpha/SNE.zip)
+* [Latest Download (for 64bit Windows) - v0.6Alpha](https://github.com/Zakki0925224/SNE/releases/download/v0.6Alpha/SNE.zip)
 * [リリース一覧](https://github.com/Zakki0925224/SNE/releases)
 
 ## Update Histories

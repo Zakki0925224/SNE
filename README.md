@@ -42,7 +42,7 @@
 
 * Title (string)
 * Description (string)
-* BPM (string)
+* BPM (int)
 * GUID (string) - エディターによって自動的に生成（楽曲の識別などに使用します）
 * NotesData (object[])
     * Time (double) - 秒単位
